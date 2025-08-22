@@ -31,6 +31,8 @@ many developers don’t use their personal github at work, and when they leave a
 
 ## Quick Start
 
+**🌐 Website**: Visit [petarran.github.io/shomei](https://petarran.github.io/shomei) for the full documentation site with interactive examples and installation guides.
+
 ### Installation
 
 **From PyPI (recommended):**

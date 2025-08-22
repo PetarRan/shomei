@@ -1,0 +1,51 @@
+# GitHub Pages Configuration
+# This file configures the Jekyll site for GitHub Pages
+
+# Site settings
+title: "Shōmei (証明)"
+description: "Proof of Your Work - A CLI tool that safely updates your personal GitHub graph"
+url: "https://petarran.github.io"
+baseurl: "/shomei"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+permalink: pretty
+
+# Collections
+collections:
+  docs:
+    output: true
+    permalink: /:collection/:name
+
+# Plugins
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .gitignore
+
+# Include in processing
+include:
+  - _pages
+  - _posts
+  - assets
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
