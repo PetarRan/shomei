@@ -46,10 +46,10 @@ dev = [
 shomei = "shomei.cli:cli"
 
 [project.urls]
-Homepage = "https://github.com/yourusername/shomei"
-Repository = "https://github.com/yourusername/shomei"
-Documentation = "https://github.com/yourusername/shomei#readme"
-Issues = "https://github.com/yourusername/shomei/issues"
+Homepage = "https://github.com/petarran/shomei"
+Repository = "https://github.com/petarran/shomei"
+Documentation = "https://github.com/petarran/shomei#readme"
+Issues = "https://github.com/petarran/shomei/issues"
 
 [tool.setuptools.dynamic]
 version = {attr = "shomei.__version__"}

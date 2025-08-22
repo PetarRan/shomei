@@ -40,14 +40,14 @@ pip install shomei
 
 **One-command Linux install:**
 ```bash
-# cleaner version coming soon
-curl -sSL https://raw.githubusercontent.com/petarran/shomei/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/petarran/shomei/main/scripts/install.sh | bash
 ```
 
 **From Homebrew (macOS/Linux):**
 ```bash
-# coming soon - will be available via:
-# brew install shomei
+# Add our tap and install
+brew tap petarran/shomei
+brew install shomei
 ```
 
 **From source:**
@@ -89,11 +89,10 @@ shomei init
 ```
 
 #### `shomei logo`
-Display the shōmei ASCII logo.
+display the shōmei ASCII logo.
 
 ```bash
-shomei logo              # Default text style
-shomei logo --style geometric  # Geometric style
+shomei logo
 ```
 
 #### `shomei contribute`

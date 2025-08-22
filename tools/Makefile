@@ -14,7 +14,7 @@ install-dev: ## Install with development dependencies
 	pip install -e "..[dev]"
 
 test: ## Run tests
-	python scripts/test_shomei.py
+	python ../scripts/test_shomei.py
 
 clean: ## Clean build artifacts
 	rm -rf build/

@@ -30,7 +30,7 @@ setup(
     long_description_content_type="text/markdown",
     author="shomei contributors",
     author_email="",
-    url="https://github.com/yourusername/shomei",
+    url="https://github.com/petarran/shomei",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -68,8 +68,8 @@ setup(
     },
     keywords="git, github, contributions, privacy, corporate, sanitize",
     project_urls={
-        "Bug Reports": "https://github.com/yourusername/shomei/issues",
-        "Source": "https://github.com/yourusername/shomei",
-        "Documentation": "https://github.com/yourusername/shomei#readme",
+        "Bug Reports": "https://github.com/petarran/shomei/issues",
+        "Source": "https://github.com/petarran/shomei",
+        "Documentation": "https://github.com/petarran/shomei/issues",
     },
 )
