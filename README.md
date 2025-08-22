@@ -9,33 +9,54 @@
 
 It transforms your private commits into safe, sanitized commits, and publishes them to your personal GitHub profile—so your contribution graph reflects your real effort.
 
-**No secrets. No leaks. Just proof.**
+**Showcase your contributions without leaking your company's IP.**
 
-## ✨ Features
+## The Problem
 
-- 🔒 **Zero IP Leakage**: Replaces all file contents with safe placeholders
-- 👤 **Author Rewriting**: Changes commit authorship to your personal details
-- 🎯 **Smart Filtering**: Only processes commits by your corporate email
-- 🌿 **Branch Cleanup**: Keeps only essential branches (main/master)
-- 🧪 **Dry Run Mode**: Preview changes before applying them
-- 📊 **Repository Analysis**: See exactly what will be processed
-- ⚙️ **Configurable**: Customize file types, placeholder text, and more
-- 🚀 **Multi-Repo Support**: Process multiple repositories at once
+Ever applied for a senior developer position only to have your GitHub contribution graph look like this?
 
-## 🚀 Quick Start
+```
+[Empty contribution graph - no green squares]
+```
+
+Companies want to see your coding activity, but your corporate work is locked away in private repositories. Your GitHub profile looks inactive, even though you're coding 40+ hours a week.
+
+**shōmei solves this by safely transforming your private commits into public contributions.**
+
+> **Note**: Want to add your logo or screenshots? Create an `assets/` folder in your repository and reference images like `![Alt text](assets/your-image.png)`. Perfect for logos, screenshots, and visual examples.
+
+## Features
+
+- **IP Protection**: Replaces all source code with safe placeholders
+- **Contribution Showcase**: Rewrites commits to reflect your personal work
+- **Smart Filtering**: Only processes your own commits by email
+- **Safe Processing**: Works on copies, never modifies originals
+
+## Quick Start
 
 ### Installation
 
+**From PyPI (recommended):**
 ```bash
-# Clone the repository
+pip install shomei
+```
+
+**One-command Linux install:**
+```bash
+curl -sSL https://raw.githubusercontent.com/yourusername/shomei/main/install.sh | bash
+```
+
+**From Homebrew (macOS/Linux):**
+```bash
+# Coming soon - will be available via:
+# brew install shomei
+```
+
+**From source:**
+```bash
 git clone https://github.com/yourusername/shomei.git
 cd shomei
-
-# Install in development mode
-pip install -e .
-
-# Or install from PyPI (when available)
-pip install shomei
+make install-user  # or: pip install -e .
 ```
 
 ### First Run
@@ -54,7 +75,7 @@ shomei process /path/to/your/repo --dry-run
 shomei process /path/to/your/repo
 ```
 
-## 📖 Usage
+## Usage
 
 ### Commands
 
@@ -66,7 +87,19 @@ shomei init
 # Prompts for:
 # - Personal name for commits
 # - Personal email for commits
+# Shows welcome message and contributing info
 ```
+
+#### `shomei logo`
+Display the shōmei ASCII logo.
+
+```bash
+shomei logo              # Default text style
+shomei logo --style geometric  # Geometric style
+```
+
+#### `shomei contribute`
+Show information about contributing to shōmei.
 
 #### `shomei analyze <repo_path>`
 Analyze a repository to show what would be processed.
@@ -106,7 +139,7 @@ shomei process --personal-email "you@example.com" --personal-name "Your Name" /p
 - `--verbose`: Enable verbose logging
 - `--config`: Path to configuration file
 
-## ⚙️ Configuration
+## Configuration
 
 Configuration is stored in `~/.shomei/config.yml`:
 
@@ -119,7 +152,7 @@ strip_file_extensions: [".py", ".js", ".ts", ".java", ".cpp", ".c", ".h", ".go",
 preserve_file_extensions: [".md", ".txt", ".yml", ".yaml", ".json", ".gitignore"]
 ```
 
-## 🔧 How It Works
+## How It Works
 
 ### Step 1: Repository Detection
 - Verifies `.git` folder exists
@@ -149,7 +182,7 @@ preserve_file_extensions: [".md", ".txt", ".yml", ".yaml", ".json", ".gitignore"
 - Creates sanitized repository ready for personal use
 - Safe to push to public GitHub
 
-## 🛡️ Safety Features
+## Safety Features
 
 - **Content Stripping**: All source code is replaced with placeholder text
 - **Author Filtering**: Only processes your own commits
@@ -157,13 +190,52 @@ preserve_file_extensions: [".md", ".txt", ".yml", ".yaml", ".json", ".gitignore"
 - **Temporary Processing**: Works on copies, never modifies originals
 - **Configurable File Types**: Choose what gets stripped vs. preserved
 
-## 📋 Requirements
+## Requirements
 
 - Python 3.10+
 - Git installed and accessible
 - Dependencies: GitPython, Click, Rich, PyYAML
 
-## 🧪 Development
+## Package Distribution
+
+### Automated Releases
+
+This project uses GitHub Actions for automated releases:
+
+1. **Create a release tag:**
+   ```bash
+   git tag -a v1.0.0 -m "Release v1.0.0"
+   git push origin v1.0.0
+   ```
+
+2. **GitHub Actions will automatically:**
+   - Run tests on multiple Python versions
+   - Build distribution packages
+   - Publish to PyPI
+   - Create GitHub release with changelog
+
+### Adding to Package Managers
+
+**Homebrew (macOS/Linux):**
+```bash
+# Add to Homebrew core or create a custom tap
+# brew install yourusername/shomei/shomei
+```
+
+**Chocolatey (Windows):**
+```bash
+# choco install shomei
+```
+
+**Scoop (Windows):**
+```bash
+# scoop install shomei
+```
+
+**Arch Linux (AUR):**
+```bash
+# yay -S shomei
+```
 
 ### Setup Development Environment
 
@@ -204,7 +276,7 @@ shomei/
 └── README.md            # This file
 ```
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -212,11 +284,11 @@ shomei/
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## ⚠️ Disclaimer
+## Disclaimer
 
 **shōmei** is designed to help developers showcase their contributions while protecting corporate IP. However:
 
@@ -225,7 +297,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Consider your company's policies before using this tool
 - The authors are not responsible for any data leaks or policy violations
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Built with [GitPython](https://gitpython.readthedocs.io/) for robust Git operations
 - CLI powered by [Click](https://click.palletsprojects.com/) for excellent user experience

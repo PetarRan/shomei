@@ -13,9 +13,18 @@ if readme_path.exists():
     with open(readme_path, "r", encoding="utf-8") as f:
         long_description = f.read()
 
+# Read version from __init__.py
+def get_version():
+    init_file = Path(__file__).parent / "shomei" / "__init__.py"
+    with open(init_file, "r", encoding="utf-8") as f:
+        for line in f:
+            if line.startswith("__version__"):
+                return line.split("=")[1].strip().strip('"\'')
+    return "0.1.0"
+
 setup(
     name="shomei",
-    version="0.1.0",
+    version=get_version(),
     description="Show off your coding contributions without leaking corporate IP",
     long_description=long_description,
     long_description_content_type="text/markdown",
