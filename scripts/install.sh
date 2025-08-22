@@ -103,7 +103,7 @@ if command -v shomei &> /dev/null; then
     echo "   2. Initialize configuration: shomei init"
     echo "   3. Start using: shomei analyze /path/to/repo"
     echo ""
-    echo "🔗 For more info: https://github.com/yourusername/shomei"
+    echo "🔗 For more info: https://github.com/petarran/shomei"
     echo ""
     echo "🤝 Want to contribute? Run: shomei contribute"
 else

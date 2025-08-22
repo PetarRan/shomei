@@ -5,16 +5,16 @@ help: ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
 install: ## Install for all users (requires sudo)
-	pip install -e .
+	pip install -e ..
 
 install-user: ## Install for current user only
-	pip install --user -e .
+	pip install --user -e ..
 
 install-dev: ## Install with development dependencies
-	pip install -e ".[dev]"
+	pip install -e "..[dev]"
 
 test: ## Run tests
-	python test_shomei.py
+	python scripts/test_shomei.py
 
 clean: ## Clean build artifacts
 	rm -rf build/
