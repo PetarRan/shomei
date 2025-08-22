@@ -1,11 +1,9 @@
 """
-shōmei - A CLI tool for developers to showcase their coding contributions on GitHub
-without leaking any proprietary code or IP from their company.
+shōmei - a CLI tool that safely updates your personal github graph to reflect the work you did from a corp github account, without ever exposing proprietary code or company IP.
 
-Transforms private commits into safe, sanitized commits and publishes them to your
-personal GitHub profile so your contribution graph reflects your real effort.
+transforms your commits into safe, sanitized commits, and publishes them to your personal github profile, so your contribution graph reflects your real effort.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.3"
 __author__ = "shomei contributors"
-__description__ = "Show off your coding contributions without leaking corporate IP"
+__description__ = "update your personal github graph to reflect the work you did"

@@ -21,6 +21,13 @@ def check_pypi_setup():
     # Check setup.py
     print("✅ Found setup.py")
     
+    # Check current version
+    try:
+        import shomei
+        print(f"✅ Current version: {shomei.__version__}")
+    except ImportError:
+        print("⚠️  Package not installed, can't check version")
+    
     # Check if package can be built
     try:
         import build
