@@ -74,7 +74,10 @@ jobs:
         pip install build twine
     
     - name: Build package
-      run: python -m build
+      run: |
+        python -m build
+        echo "Built packages:"
+        ls -la dist/
     
     - name: Verify PyPI credentials
       run: |
@@ -92,15 +95,27 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
       run: |
         echo "Uploading to PyPI..."
+        echo "Package files to upload:"
+        ls -la dist/
         twine upload --verbose dist/*
       continue-on-error: false
     
     - name: Create GitHub Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: actions/github-script@v7
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
+        script: |
+          try {
+            const { data: release } = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: context.ref.replace('refs/tags/', ''),
+              name: `Release ${context.ref.replace('refs/tags/', '')}`,
+              body: `## What's New in ${context.ref.replace('refs/tags/', '')}\n\n- Automated release from GitHub Actions\n- Package published to PyPI\n- All tests passed successfully\n\n## Installation\n\n\`\`\`bash\npip install shomei\n\`\`\`\n\n## What's Changed\n\n- Initial release of shōmei CLI tool\n- Safe repository sanitization for GitHub contributions\n- IP protection without losing contribution history`,
+              draft: false,
+              prerelease: false
+            });
+            console.log(`✅ Release created successfully: ${release.html_url}`);
+          } catch (error) {
+            console.error('❌ Failed to create GitHub release:', error.message);
+            core.setFailed(`Failed to create release: ${error.message}`);
+          }
