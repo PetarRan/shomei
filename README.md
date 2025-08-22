@@ -1,36 +1,33 @@
-# shōmei (証明)
+<img src="assets/logo.png" width="120px" />
 
-> Show off your coding contributions without leaking corporate IP
+> update your github contribution graph to reflect the work you actually did while working from another account
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**shōmei** is a CLI tool for developers who want to showcase their coding contributions on GitHub—without leaking any proprietary code or IP from their company.
+**shōmei** (証明) is a CLI tool that safely updates your personal github graph to reflect the work you did from a corp github account, without ever exposing proprietary code or company IP.
 
-It transforms your private commits into safe, sanitized commits, and publishes them to your personal GitHub profile—so your contribution graph reflects your real effort.
+<img src="assets/hero.png" width="200px" />
+
+transforms your commits into safe, sanitized commits, and publishes them to your personal github profile, so your contribution graph reflects your real effort.
 
 **Showcase your contributions without leaking your company's IP.**
 
 ## The Problem
 
-Ever applied for a senior developer position only to have your GitHub contribution graph look like this?
+i’m sure by now you’ve seen posts like this floating around the web. 
 
-```
-[Empty contribution graph - no green squares]
-```
+<img src="assets/screenshot.png" width="120px" />
 
-Companies want to see your coding activity, but your corporate work is locked away in private repositories. Your GitHub profile looks inactive, even though you're coding 40+ hours a week.
+many developers don’t use their personal github at work, and when they leave a company and start applying elsewhere, it can look like they didn’t do anything the past year, at least to some recruiters. let’s be honest, most devs don’t really care about this stuff, and it doesn’t prove your competency in any real sense, especially since it can easily be faked. this tool is just for those who want to keep everything in order and show that they were active while working from another account.
 
-**shōmei solves this by safely transforming your private commits into public contributions.**
-
-> **Note**: Want to add your logo or screenshots? Create an `assets/` folder in your repository and reference images like `![Alt text](assets/your-image.png)`. Perfect for logos, screenshots, and visual examples.
+**shōmei solves this by safely updating your activity graph to reflect your previous work.**
 
 ## Features
 
-- **IP Protection**: Replaces all source code with safe placeholders
-- **Contribution Showcase**: Rewrites commits to reflect your personal work
-- **Smart Filtering**: Only processes your own commits by email
-- **Safe Processing**: Works on copies, never modifies originals
+- **IP protection**: replaces all source code with safe placeholders 
+- **contribution showcase**: rewrites commits to reflect your personal work
+- **smart filtering**: only processes your own commits
 
 ## Quick Start
 
@@ -43,18 +40,19 @@ pip install shomei
 
 **One-command Linux install:**
 ```bash
-curl -sSL https://raw.githubusercontent.com/yourusername/shomei/main/install.sh | bash
+# cleaner version coming soon
+curl -sSL https://raw.githubusercontent.com/petarran/shomei/main/install.sh | bash
 ```
 
 **From Homebrew (macOS/Linux):**
 ```bash
-# Coming soon - will be available via:
+# coming soon - will be available via:
 # brew install shomei
 ```
 
 **From source:**
 ```bash
-git clone https://github.com/yourusername/shomei.git
+git clone https://github.com/petarran/shomei.git
 cd shomei
 make install-user  # or: pip install -e .
 ```
@@ -80,11 +78,11 @@ shomei process /path/to/your/repo
 ### Commands
 
 #### `shomei init`
-Initialize your configuration file with personal details.
+initialize your configuration file with personal details.
 
 ```bash
 shomei init
-# Prompts for:
+# prompts for:
 # - Personal name for commits
 # - Personal email for commits
 # Shows welcome message and contributing info
@@ -102,30 +100,30 @@ shomei logo --style geometric  # Geometric style
 Show information about contributing to shōmei.
 
 #### `shomei analyze <repo_path>`
-Analyze a repository to show what would be processed.
+analyze a repository to show what would be processed.
 
 ```bash
 shomei analyze /path/to/repo
-# Shows:
-# - Commit analysis by author
-# - Files that will be stripped/preserved
-# - Repository statistics
+# shows:
+# - commit analysis by author
+# - files that will be stripped/preserved
+# - repository statistics
 ```
 
 #### `shomei process <repo_paths...>`
-Process one or more repositories and create sanitized versions.
+process one or more repositories and create sanitized versions.
 
 ```bash
-# Process current directory
+# process current directory
 shomei process
 
-# Process specific repositories
+# process specific repositories
 shomei process /path/to/repo1 /path/to/repo2
 
-# Dry run (preview only)
+# dry run (preview only)
 shomei process --dry-run /path/to/repo
 
-# Override personal details
+# override personal details
 shomei process --personal-email "you@example.com" --personal-name "Your Name" /path/to/repo
 ```
 
@@ -155,40 +153,40 @@ preserve_file_extensions: [".md", ".txt", ".yml", ".yaml", ".json", ".gitignore"
 ## How It Works
 
 ### Step 1: Repository Detection
-- Verifies `.git` folder exists
-- Supports multi-repo mode
+- verifies `.git` folder exists
+- supports multi-repo mode
 
 ### Step 2: Git User Detection
-- Auto-reads `git config user.name` and `git config user.email`
-- Prompts for confirmation/change
+- auto-reads `git config user.name` and `git config user.email`
+- prompts for confirmation/change
 
 ### Step 3: Commit Filtering
-- Only keeps commits authored by your corporate email
-- Uses GitPython for robust filtering
+- only keeps commits authored by your corporate email
+- uses GitPython for robust filtering
 
 ### Step 4: Commit Rewriting
-- Replaces author/committer with your personal info
-- Optionally sanitizes commit messages
+- replaces author/committer with your personal info
+- optionally sanitizes commit messages
 
 ### Step 5: Content Stripping
-- Replaces every file with `placeholder.txt`
-- Prevents any corporate IP from leaving the machine
+- replaces every file with `placeholder.txt`
+- prevents any corporate IP from leaving the machine
 
 ### Step 6: Cleanup
-- Keeps only main/master branch
-- Deletes all other branches and tags
+- keeps only main/master branch
+- deletes all other branches and tags
 
 ### Step 7: Output
-- Creates sanitized repository ready for personal use
-- Safe to push to public GitHub
+- creates sanitized repository ready for personal use
+- safe to push to public GitHub
 
 ## Safety Features
 
-- **Content Stripping**: All source code is replaced with placeholder text
-- **Author Filtering**: Only processes your own commits
-- **Dry Run Mode**: Preview all changes before applying
-- **Temporary Processing**: Works on copies, never modifies originals
-- **Configurable File Types**: Choose what gets stripped vs. preserved
+- **Content Stripping**: all source code is replaced with placeholder text
+- **Author Filtering**: only processes your own commits
+- **Dry Run Mode**: preview all changes before applying
+- **Temporary Processing**: works on copies, never modifies originals
+- **Configurable File Types**: choose what gets stripped vs. preserved
 
 ## Requirements
 
@@ -200,26 +198,26 @@ preserve_file_extensions: [".md", ".txt", ".yml", ".yaml", ".json", ".gitignore"
 
 ### Automated Releases
 
-This project uses GitHub Actions for automated releases:
+this project uses GitHub Actions for automated releases:
 
-1. **Create a release tag:**
+1. **create a release tag:**
    ```bash
    git tag -a v1.0.0 -m "Release v1.0.0"
    git push origin v1.0.0
    ```
 
 2. **GitHub Actions will automatically:**
-   - Run tests on multiple Python versions
-   - Build distribution packages
-   - Publish to PyPI
-   - Create GitHub release with changelog
+   - run tests on multiple Python versions
+   - build distribution packages
+   - publish to PyPI
+   - create GitHub release with changelog
 
 ### Adding to Package Managers
 
 **Homebrew (macOS/Linux):**
 ```bash
 # Add to Homebrew core or create a custom tap
-# brew install yourusername/shomei/shomei
+# brew install petarran/shomei/shomei
 ```
 
 **Chocolatey (Windows):**
@@ -240,23 +238,23 @@ This project uses GitHub Actions for automated releases:
 ### Setup Development Environment
 
 ```bash
-# Clone and setup
-git clone https://github.com/yourusername/shomei.git
+# clone and setup
+git clone https://github.com/petarran/shomei.git
 cd shomei
 
-# Install development dependencies
+# install development dependencies
 pip install -e ".[dev]"
 
-# Run tests
+# run tests
 pytest
 
-# Format code
+# format code
 black shomei/
 
-# Lint code
+# lint code
 flake8 shomei/
 
-# Type checking
+# type checking
 mypy shomei/
 ```
 
@@ -278,31 +276,31 @@ shomei/
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. fork the repository
+2. create a feature branch (`git checkout -b feature/amazing-feature`)
+3. commit your changes (`git commit -m 'Add amazing feature'`)
+4. push to the branch (`git push origin feature/amazing-feature`)
+5. open a Pull Request
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+this project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Disclaimer
 
-**shōmei** is designed to help developers showcase their contributions while protecting corporate IP. However:
+**shōmei** is designed to help developers showcase their contributions while protecting corporate IP. however:
 
-- Always review the output before pushing to ensure no sensitive information remains
-- Use dry-run mode to preview changes
-- Consider your company's policies before using this tool
-- The authors are not responsible for any data leaks or policy violations
+- always review the output before pushing to ensure no sensitive information remains
+- use dry-run mode to preview changes
+- consider your company's policies before using this tool
+- the authors are not responsible for any data leaks or policy violations
 
 ## Acknowledgments
 
-- Built with [GitPython](https://gitpython.readthedocs.io/) for robust Git operations
+- built with [GitPython](https://gitpython.readthedocs.io/) for robust Git operations
 - CLI powered by [Click](https://click.palletsprojects.com/) for excellent user experience
-- Beautiful output thanks to [Rich](https://rich.readthedocs.io/)
+- beautiful output thanks to [Rich](https://rich.readthedocs.io/)
 
 ---
 
-**Made with ❤️ for developers who want to showcase their work safely.**
+**made with ❤️ for developers who want to showcase their work safely.**
