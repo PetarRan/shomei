@@ -13,6 +13,7 @@ from rich.text import Text
 from .core import ShomeiProcessor
 from .config import Config
 from .utils import setup_logging
+from .art import print_logo, print_welcome, print_contributing, print_safety_reminder, print_version_info
 
 console = Console()
 
@@ -35,6 +36,9 @@ def cli(ctx, verbose, config):
     
     # Setup logging
     setup_logging(verbose)
+    
+    # Display ASCII logo
+    print_logo("text")  # You can change to "geometric" if you prefer
     
     # Display banner
     banner = Text("shōmei", style="bold blue")
@@ -105,6 +109,10 @@ def init(ctx, config_path):
     """
     Initialize configuration file with your personal details.
     """
+    # Show welcome message for first-time users
+    print_welcome()
+    print()  # Add spacing
+    
     config_path = Path(config_path).expanduser()
     
     if config_path.exists():
@@ -123,6 +131,28 @@ def init(ctx, config_path):
     # Save config
     config.save(config_path)
     console.print(f"[green]Configuration saved to {config_path}[/green]")
+    
+    # Show next steps and contributing info
+    print()
+    print_contributing()
+    print()
+    print_safety_reminder()
+
+
+@cli.command()
+def logo():
+    """
+    Display the shōmei ASCII logo.
+    """
+    print_logo()
+
+
+@cli.command()
+def contribute():
+    """
+    Show information about contributing to shōmei.
+    """
+    print_contributing()
 
 
 @cli.command()
