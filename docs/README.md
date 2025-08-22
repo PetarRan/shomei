@@ -21,8 +21,10 @@ Once deployed, your site will be available at:
 
 ### Adding Your Logo
 1. Create an `assets/` folder
-2. Add your logo images (PNG, SVG, etc.)
-3. Update the HTML to reference your logo
+2. Add your logo images:
+   - `logo-icon.png` - Small icon for header and favicon
+   - `logo.png` - Main logo for hero section
+3. The HTML automatically references these files
 
 ### Updating Content
 - Edit `index.html` to change the website content

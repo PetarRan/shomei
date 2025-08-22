@@ -6,8 +6,8 @@
     <title>Shōmei (証明) - Proof of Your Work</title>
     <meta name="description" content="A CLI tool that safely updates your personal GitHub graph to reflect the work you did from a corporate GitHub account, without ever exposing proprietary code or company IP.">
     
-    <!-- GitHub Pages favicon -->
-    <link rel="icon" type="image/x-icon" href="https://github.com/favicon.ico">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/logo-icon.png">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -118,10 +118,16 @@
             font-size: 4rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            text-align: center;
+        }
+        
+        .hero-logo img {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .hero-logo img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
 
         .hero-subtitle {
@@ -427,7 +433,7 @@
         <div class="container">
                     <div class="header-content">
             <a href="#" class="logo">
-                <img src="assets/logo.svg" alt="shōmei logo" width="32" height="32" style="margin-right: 0.5rem; vertical-align: middle;">
+                <img src="assets/logo-icon.png" alt="shōmei logo" width="32" height="32" style="margin-right: 0.5rem; vertical-align: middle;">
                 shōmei
             </a>
             <nav class="nav-links">
@@ -449,7 +455,7 @@
     <section class="hero">
         <div class="container">
             <div class="hero-logo fade-in-up">
-                <img src="assets/logo.svg" alt="shōmei logo" width="120" height="120" style="margin-bottom: 1rem; display: block; margin-left: auto; margin-right: auto;">
+                <img src="assets/logo.png" alt="shōmei logo" width="200" height="200" style="margin-bottom: 1rem; display: block; margin-left: auto; margin-right: auto; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);">
                 Shōmei (証明)
             </div>
             <div class="hero-subtitle fade-in-up">pronounced: shoh-may</div>
