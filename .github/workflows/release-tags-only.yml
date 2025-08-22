@@ -1,11 +1,13 @@
 name: Release and Publish
 
-# This workflow ONLY triggers when you create and push a new version tag
-# It will NOT run on regular pushes to main branch
+# It will NEVER run on regular pushes to main branch
+# Only triggers when you: git tag -a vX && git push origin vX
 on:
   push:
     tags:
       - 'v*'  # Matches v0.1.0, v0.2.3, v1.0.0, etc.
+  # Explicitly exclude other triggers
+  # workflow_dispatch:  # Commented out - manual triggers disabled
 
 jobs:
   test:
@@ -18,6 +20,18 @@ jobs:
         python-version: ['3.10.x', '3.11.x', '3.12.x']
     
     steps:
+    - name: Debug - Show what triggered this workflow
+      run: |
+        echo "🔍 DEBUG: What triggered this workflow?"
+        echo "GITHUB_REF: $GITHUB_REF"
+        echo "GITHUB_REF_NAME: $GITHUB_REF_NAME"
+        echo "GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
+        echo "GITHUB_SHA: $GITHUB_SHA"
+        echo "GITHUB_HEAD_REF: $GITHUB_HEAD_REF"
+        echo "GITHUB_BASE_REF: $GITHUB_BASE_REF"
+        echo ""
+        echo "This should ONLY run on tags, not on regular pushes!"
+        
     - uses: actions/checkout@v4
     
     - name: Set up Python ${{ matrix.python-version }}
