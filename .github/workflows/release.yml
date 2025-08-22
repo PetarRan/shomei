@@ -76,11 +76,24 @@ jobs:
     - name: Build package
       run: python -m build
     
+    - name: Verify PyPI credentials
+      run: |
+        echo "Checking PyPI token availability..."
+        if [ -z "${{ secrets.PYPI_API_TOKEN }}" ]; then
+          echo "ERROR: PYPI_API_TOKEN secret is not set!"
+          exit 1
+        else
+          echo "PyPI token is available (length: ${#PYPI_API_TOKEN})"
+        fi
+    
     - name: Publish to PyPI
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      run: twine upload dist/*
+      run: |
+        echo "Uploading to PyPI..."
+        twine upload --verbose dist/*
+      continue-on-error: false
     
     - name: Create GitHub Release
       uses: actions/create-release@v1
