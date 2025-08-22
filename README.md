@@ -7,7 +7,7 @@
 
 **shōmei** (証明) is a CLI tool that safely updates your personal github graph to reflect the work you did from a corp github account, without ever exposing proprietary code or company IP.
 
-<img src="assets/hero.png" width="200px" />
+![Hero](assets/hero.png)
 
 transforms your commits into safe, sanitized commits, and publishes them to your personal github profile, so your contribution graph reflects your real effort.
 
@@ -17,7 +17,7 @@ transforms your commits into safe, sanitized commits, and publishes them to your
 
 i’m sure by now you’ve seen posts like this floating around the web. 
 
-<img src="assets/screenshot.png" width="120px" />
+![problem](assets/screenshot-problem.png)
 
 many developers don’t use their personal github at work, and when they leave a company and start applying elsewhere, it can look like they didn’t do anything the past year, at least to some recruiters. let’s be honest, most devs don’t really care about this stuff, and it doesn’t prove your competency in any real sense, especially since it can easily be faked. this tool is just for those who want to keep everything in order and show that they were active while working from another account.
 
