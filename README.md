@@ -1,4 +1,4 @@
-<img src="assets/logo.png" width="120px" />
+# shōmei
 
 > update your github contribution graph to reflect the work you actually did while working from another account
 
@@ -7,33 +7,36 @@
 
 **shōmei** (証明) is a CLI tool that safely updates your personal github graph to reflect the work you did from a corp github account, without ever exposing proprietary code or company IP.
 
-![Hero](assets/hero.png)
-
 transforms your commits into safe, sanitized commits, and publishes them to your personal github profile, so your contribution graph reflects your real effort.
 
 **Showcase your contributions without leaking your company's IP.**
 
-## The Problem
+## the problem
 
-i’m sure by now you’ve seen posts like this floating around the web. 
+i'm sure by now you've seen posts like this floating around the web. 
 
-![problem](assets/screenshot-problem.png)
-
-many developers don’t use their personal github at work, and when they leave a company and start applying elsewhere, it can look like they didn’t do anything the past year, at least to some recruiters. let’s be honest, most devs don’t really care about this stuff, and it doesn’t prove your competency in any real sense, especially since it can easily be faked. this tool is just for those who want to keep everything in order and show that they were active while working from another account.
+many developers don't use their personal github at work, and when they leave a company and start applying elsewhere, it can look like they didn't do anything the past year, at least to some recruiters. let's be honest, most devs don't really care about this stuff, and it doesn't prove your competency in any real sense, especially since it can easily be faked. this tool is just for those who want to keep everything in order and show that they were active while working from another account.
 
 **shōmei solves this by safely updating your activity graph to reflect your previous work.**
 
-## Features
+## features
 
 - **IP protection**: replaces all source code with safe placeholders 
 - **contribution showcase**: rewrites commits to reflect your personal work
 - **smart filtering**: only processes your own commits
 
-## Quick Start
+## quick start
 
 **🌐 Website**: Visit [petarran.github.io/shomei](https://petarran.github.io/shomei) for the full documentation site with interactive examples and installation guides.
 
-### Installation
+### installation
+
+**From Homebrew (macOS/Linux):**
+```bash
+# Add our tap and install
+brew tap petarran/shomei
+brew install shomei
+```
 
 **From PyPI (recommended):**
 ```bash
@@ -45,13 +48,6 @@ pip install shomei
 curl -sSL https://raw.githubusercontent.com/petarran/shomei/main/scripts/install.sh | bash
 ```
 
-**From Homebrew (macOS/Linux):**
-```bash
-# Add our tap and install
-brew tap petarran/shomei
-brew install shomei
-```
-
 **From source:**
 ```bash
 git clone https://github.com/petarran/shomei.git
@@ -59,7 +55,7 @@ cd shomei
 make install-user  # or: pip install -e .
 ```
 
-### First Run
+### first run
 
 ```bash
 # Initialize configuration with your personal details
@@ -75,9 +71,9 @@ shomei process /path/to/your/repo --dry-run
 shomei process /path/to/your/repo
 ```
 
-## Usage
+## usage
 
-### Commands
+### commands
 
 #### `shomei init`
 initialize your configuration file with personal details.
@@ -88,13 +84,6 @@ shomei init
 # - Personal name for commits
 # - Personal email for commits
 # Shows welcome message and contributing info
-```
-
-#### `shomei logo`
-display the shōmei ASCII logo.
-
-```bash
-shomei logo
 ```
 
 #### `shomei contribute`
@@ -128,7 +117,7 @@ shomei process --dry-run /path/to/repo
 shomei process --personal-email "you@example.com" --personal-name "Your Name" /path/to/repo
 ```
 
-### Options
+### options
 
 - `--dry-run`: Preview changes without applying them
 - `--personal-email`: Override personal email from config
@@ -138,7 +127,7 @@ shomei process --personal-email "you@example.com" --personal-name "Your Name" /p
 - `--verbose`: Enable verbose logging
 - `--config`: Path to configuration file
 
-## Configuration
+## configuration
 
 Configuration is stored in `~/.shomei/config.yml`:
 
@@ -151,37 +140,37 @@ strip_file_extensions: [".py", ".js", ".ts", ".java", ".cpp", ".c", ".h", ".go",
 preserve_file_extensions: [".md", ".txt", ".yml", ".yaml", ".json", ".gitignore"]
 ```
 
-## How It Works
+## how it works
 
-### Step 1: Repository Detection
+### step 1: repository detection
 - verifies `.git` folder exists
 - supports multi-repo mode
 
-### Step 2: Git User Detection
+### step 2: git user detection
 - auto-reads `git config user.name` and `git config user.email`
 - prompts for confirmation/change
 
-### Step 3: Commit Filtering
+### step 3: commit filtering
 - only keeps commits authored by your corporate email
 - uses GitPython for robust filtering
 
-### Step 4: Commit Rewriting
+### step 4: commit rewriting
 - replaces author/committer with your personal info
 - optionally sanitizes commit messages
 
-### Step 5: Content Stripping
+### step 5: content stripping
 - replaces every file with `placeholder.txt`
 - prevents any corporate IP from leaving the machine
 
-### Step 6: Cleanup
+### step 6: cleanup
 - keeps only main/master branch
 - deletes all other branches and tags
 
-### Step 7: Output
+### step 7: output
 - creates sanitized repository ready for personal use
 - safe to push to public GitHub
 
-## Safety Features
+## safety features
 
 - **Content Stripping**: all source code is replaced with placeholder text
 - **Author Filtering**: only processes your own commits
@@ -189,15 +178,15 @@ preserve_file_extensions: [".md", ".txt", ".yml", ".yaml", ".json", ".gitignore"
 - **Temporary Processing**: works on copies, never modifies originals
 - **Configurable File Types**: choose what gets stripped vs. preserved
 
-## Requirements
+## requirements
 
 - Python 3.10+
 - Git installed and accessible
 - Dependencies: GitPython, Click, Rich, PyYAML
 
-## Package Distribution
+## package distribution
 
-### Automated Releases
+### automated releases
 
 this project uses GitHub Actions for automated releases:
 
@@ -213,7 +202,7 @@ this project uses GitHub Actions for automated releases:
    - publish to PyPI
    - create GitHub release with changelog
 
-### Adding to Package Managers
+### adding to package managers
 
 **Homebrew (macOS/Linux):**
 ```bash
@@ -236,7 +225,7 @@ this project uses GitHub Actions for automated releases:
 # yay -S shomei
 ```
 
-### Setup Development Environment
+### setup development environment
 
 ```bash
 # clone and setup
@@ -259,7 +248,7 @@ flake8 shomei/
 mypy shomei/
 ```
 
-### Project Structure
+### project structure
 
 ```
 shomei/
@@ -275,7 +264,7 @@ shomei/
 └── README.md            # This file
 ```
 
-## Contributing
+## contributing
 
 1. fork the repository
 2. create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -283,11 +272,11 @@ shomei/
 4. push to the branch (`git push origin feature/amazing-feature`)
 5. open a Pull Request
 
-## License
+## license
 
 this project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Disclaimer
+## disclaimer
 
 **shōmei** is designed to help developers showcase their contributions while protecting corporate IP. however:
 
@@ -296,7 +285,7 @@ this project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - consider your company's policies before using this tool
 - the authors are not responsible for any data leaks or policy violations
 
-## Acknowledgments
+## acknowledgments
 
 - built with [GitPython](https://gitpython.readthedocs.io/) for robust Git operations
 - CLI powered by [Click](https://click.palletsprojects.com/) for excellent user experience

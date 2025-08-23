@@ -1,4 +1,4 @@
-# Shōmei Documentation
+# shōmei docs
 
 This folder contains the GitHub Pages website for shōmei.
 
