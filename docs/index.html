@@ -7,7 +7,7 @@
     <meta name="description" content="A CLI tool that safely updates your personal GitHub graph to reflect the work you did from a corporate GitHub account, without ever exposing proprietary code or company IP.">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="assets/logo-icon.png">
+    <link rel="icon" type="image/png" href="../assets/logo-icon.png">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,10 +16,10 @@
     
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #8b5cf6;
-            --accent: #06b6d4;
+            --primary: #d53734;
+            --primary-dark: #99221f;
+            --secondary: #1f2937;
+            --accent: #e32524;
             --text: #1f2937;
             --text-light: #6b7280;
             --bg: #ffffff;
@@ -122,12 +122,13 @@
         }
         
         .hero-logo img {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
+            max-width: 200px;
+            height: auto;
         }
         
         .hero-logo img:hover {
             transform: scale(1.05);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
 
         .hero-subtitle {
@@ -146,10 +147,16 @@
 
         .hero-description {
             font-size: 1.2rem;
-            color: var(--text);
+            color: var(--text-light);
             max-width: 600px;
             margin: 0 auto 3rem;
             line-height: 1.7;
+            font-style: italic;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .cta-buttons {
@@ -287,6 +294,31 @@
             padding: 1.5rem;
             margin: 1.5rem 0;
             overflow-x: auto;
+            position: relative;
+        }
+        
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0.8;
+        }
+        
+        .copy-button:hover {
+            opacity: 1;
+            background: var(--primary-dark);
+        }
+        
+        .copy-button.copied {
+            background: var(--secondary);
         }
 
         .code-block pre {
@@ -433,18 +465,16 @@
         <div class="container">
                     <div class="header-content">
             <a href="#" class="logo">
-                <img src="assets/logo-icon.png" alt="shōmei logo" width="32" height="32" style="margin-right: 0.5rem; vertical-align: middle;">
-                shōmei
+                <img src="../assets/logo-icon.png" alt="shōmei logo" width="32" height="32">
             </a>
-            <nav class="nav-links">
-                    <a href="#features">Features</a>
+                            <nav class="nav-links">
                     <a href="#installation">Installation</a>
-                    <a href="#usage">Usage</a>
-                    <a href="https://github.com/petarran/shomei" class="github-btn">
+                    <a href="docs.html">Documentation</a>
+                    <a href="https://github.com/petarran/shomei" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem; background: var(--secondary); color: white;">
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
                         </svg>
-                        GitHub
+                        ⭐ Star
                     </a>
                 </nav>
             </div>
@@ -455,8 +485,7 @@
     <section class="hero">
         <div class="container">
             <div class="hero-logo fade-in-up">
-                <img src="assets/logo.png" alt="shōmei logo" width="200" height="200" style="margin-bottom: 1rem; display: block; margin-left: auto; margin-right: auto; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);">
-                Shōmei (証明)
+                <img src="../assets/logo.png" alt="shōmei logo" width="200" height="200" style="margin-bottom: 1rem; display: block; margin-left: auto; margin-right: auto;">
             </div>
             <div class="hero-subtitle fade-in-up">pronounced: shoh-may</div>
             <div class="hero-description fade-in-up">
@@ -478,7 +507,13 @@
                     <div class="stat-number">Python 3.10+</div>
                     <div class="stat-label">Requirement</div>
                 </div>
+                <div class="stat">
+                    <div class="stat-number" id="star-count">⭐</div>
+                    <div class="stat-label">GitHub Stars</div>
+                </div>
             </div>
+            
+
 
             <div class="cta-buttons fade-in-up">
                 <a href="#installation" class="btn btn-primary glow">
@@ -500,38 +535,16 @@
     <!-- Content -->
     <main class="content">
         <div class="container">
-            <!-- Features -->
-            <section id="features" class="section">
-                <h2 class="section-title">Why Shōmei?</h2>
-                <p class="section-subtitle">Show off your coding contributions without leaking corporate IP</p>
+
                 
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">🔒</div>
-                        <h3 class="feature-title">IP Protection</h3>
-                        <p class="feature-description">Never expose proprietary code or company secrets. Your corporate IP stays safe while your contributions get recognized.</p>
-                    </div>
+
+                    
+
+                    
+
                     
                     <div class="feature-card">
-                        <div class="feature-icon">📊</div>
-                        <h3 class="feature-title">Contribution Graph</h3>
-                        <p class="feature-description">Transform your private commits into safe, sanitized commits that appear on your personal GitHub profile.</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-icon">⚡</div>
-                        <h3 class="feature-title">Fast & Safe</h3>
-                        <p class="feature-description">Automated process that strips sensitive content and rewrites commit history without manual intervention.</p>
-                    </div>
-                    
-                    <div class="feature-card">
-                        <div class="feature-card">
-                        <div class="feature-icon">🛡️</div>
-                        <h3 class="feature-title">Zero Risk</h3>
-                        <p class="feature-description">Dry-run mode lets you preview changes before applying them. Your original repository remains untouched.</p>
-                    </div>
-                </div>
-            </section>
+    
 
             <!-- Installation -->
             <section id="installation" class="section">
@@ -540,26 +553,29 @@
                 
                 <div class="installation">
                     <div class="install-tabs">
-                        <button class="install-tab active" onclick="showTab('pip')">PyPI</button>
-                        <button class="install-tab" onclick="showTab('homebrew')">Homebrew</button>
+                        <button class="install-tab active" onclick="showTab('homebrew')">Homebrew</button>
+                        <button class="install-tab" onclick="showTab('pip')">PyPI</button>
                         <button class="install-tab" onclick="showTab('source')">Source</button>
                     </div>
                     
-                    <div id="pip" class="install-content active">
+                    <div id="homebrew" class="install-content active">
                         <div class="code-block">
-                            <pre><code>pip install shomei</code></pre>
+                            <button class="copy-button" onclick="copyToClipboard('homebrew-code')">Copy</button>
+                            <pre><code id="homebrew-code">brew install petarran/shomei/shomei</code></pre>
                         </div>
                     </div>
                     
-                    <div id="homebrew" class="install-content">
+                    <div id="pip" class="install-content">
                         <div class="code-block">
-                            <pre><code>brew install petarran/shomei/shomei</code></pre>
+                            <button class="copy-button" onclick="copyToClipboard('pip-code')">Copy</button>
+                            <pre><code id="pip-code">pip install shomei</code></pre>
                         </div>
                     </div>
                     
                     <div id="source" class="install-content">
                         <div class="code-block">
-                            <pre><code>git clone https://github.com/petarran/shomei.git
+                            <button class="copy-button" onclick="copyToClipboard('source-code')">Copy</button>
+                            <pre><code id="source-code">git clone https://github.com/petarran/shomei.git
 cd shomei
 pip install -e .</code></pre>
                         </div>
@@ -573,7 +589,8 @@ pip install -e .</code></pre>
                 <p class="section-subtitle">Process your first repository in minutes</p>
                 
                 <div class="code-block">
-                    <pre><code># Initialize shōmei in your repository
+                    <button class="copy-button" onclick="copyToClipboard('usage-code')">Copy</button>
+                    <pre><code id="usage-code"># Initialize shōmei in your repository
 shomei init
 
 # Analyze what will be processed
@@ -590,7 +607,8 @@ git push origin main</code></pre>
                 <p style="color: var(--text-light); margin-bottom: 1rem;">Create a <code>config.yml</code> file to customize the sanitization process:</p>
                 
                 <div class="code-block">
-                    <pre><code># config.yml
+                    <button class="copy-button" onclick="copyToClipboard('config-code')">Copy</button>
+                    <pre><code id="config-code"># config.yml
 author:
   name: "Your Name"
   email: "your.email@example.com"
@@ -617,7 +635,7 @@ output:
                 <a href="https://github.com/petarran/shomei/blob/main/README.md">Documentation</a>
                 <a href="https://pypi.org/project/shomei/">PyPI</a>
             </div>
-            <p>&copy; 2024 shōmei contributors. Licensed under MIT.</p>
+            <p>&copy; 2025 shōmei contributors. Licensed under MIT.</p>
         </div>
     </footer>
 
@@ -669,6 +687,22 @@ output:
         document.querySelectorAll('.section').forEach(section => {
             observer.observe(section);
         });
+        
+        // Fetch GitHub star count
+        async function fetchStarCount() {
+            try {
+                const response = await fetch('https://api.github.com/repos/petarran/shomei');
+                const data = await response.json();
+                const starCount = data.stargazers_count;
+                document.getElementById('star-count').textContent = `⭐ ${starCount}`;
+            } catch (error) {
+                console.log('Could not fetch star count:', error);
+                document.getElementById('star-count').textContent = '⭐';
+            }
+        }
+        
+        // Fetch star count when page loads
+        fetchStarCount();
     </script>
 </body>
 </html>
