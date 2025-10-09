@@ -1,4 +1,4 @@
-name: "Update GitHub Pages: ${{ github.event.head_commit.message }}"
+name: Update GitHub Pages
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
 
 jobs:
   update-docs:
+    name: "Update GitHub Pages: ${{ github.event.head_commit.message }}"
     runs-on: ubuntu-latest
     permissions:
       contents: read

@@ -1,4 +1,4 @@
-name: "Release and Deploy: ${{ github.event.head_commit.message }}"
+name: Release and Deploy
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
 
 jobs:
   release-and-deploy:
+    name: "Release and Deploy: ${{ github.event.head_commit.message }}"
     runs-on: ubuntu-latest
     permissions:
       contents: write
