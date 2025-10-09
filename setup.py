@@ -47,9 +47,7 @@ setup(
     python_requires=">=3.10",
     install_requires=[
         "click>=8.0.0",
-        "gitpython>=3.1.0",
-        "colorama>=0.4.6",
-        "pyyaml>=6.0",
+        "requests>=2.25.0",
         "rich>=13.0.0",
     ],
     extras_require={

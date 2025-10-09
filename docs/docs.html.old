@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>shōmei docs - Usage & Examples</title>
+    <meta name="description" content="Complete documentation for shōmei CLI tool - usage examples, configuration, and advanced features">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/petarran/shomei/main/assets/logo-icon.png">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #d53734;
+            --primary-dark: #99221f;
+            --secondary: #1f2937;
+            --accent: #e32524;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #ffffff;
+            --bg-dark: #f9fafb;
+            --border: #e5e7eb;
+            --code-bg: #f3f4f6;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg);
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+        
+        .header {
+            overflow-x: hidden;
+        }
+        
+        .header-content {
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
+        
+        .nav-links {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .nav-links a {
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .github-btn {
+            background: var(--text);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.2s;
+        }
+
+        .github-btn:hover {
+            background: var(--text-light);
+        }
+
+        /* Content */
+        .content {
+            padding: 4rem 0;
+        }
+
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .subsection-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--secondary);
+        }
+
+        .subsection-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            position: relative;
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+        
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0.8;
+        }
+        
+        .copy-button:hover {
+            opacity: 1;
+            background: var(--primary-dark);
+        }
+        
+        .copy-button.copied {
+            background: var(--secondary);
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .code-block code {
+            color: var(--text);
+        }
+
+        .code-block .comment {
+            color: var(--text-light);
+        }
+
+        /* Command examples */
+        .command-example {
+            background: var(--bg-dark);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .command-example h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Configuration */
+        .config-section {
+            background: var(--bg-dark);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .config-option {
+            margin-bottom: 1.5rem;
+        }
+
+        .config-option h4 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .config-option p {
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .config-option .default {
+            background: var(--primary);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Navigation sidebar */
+        .docs-nav {
+            position: sticky;
+            top: 100px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+        .docs-nav h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .docs-nav ul {
+            list-style: none;
+        }
+
+        .docs-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .docs-nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+            display: block;
+            padding: 0.3rem 0;
+        }
+
+        .docs-nav a:hover {
+            color: var(--primary);
+        }
+
+        .docs-nav a.active {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* Layout */
+        .docs-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 3rem;
+            align-items: start;
+            min-width: 0; /* Prevent grid overflow */
+        }
+        
+        .main-content {
+            min-width: 0; /* Prevent content overflow */
+            overflow-wrap: break-word; /* Break long words */
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 0.5rem;
+                max-width: 100vw;
+                overflow-x: hidden;
+            }
+            
+            .docs-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .docs-nav {
+                position: static;
+                margin-bottom: 2rem;
+            }
+            
+            .nav-links {
+                gap: 0.3rem;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+            
+            .nav-links a {
+                font-size: 0.8rem;
+                padding: 0.25rem 0.4rem;
+                white-space: nowrap;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+            }
+            
+            .logo {
+                align-self: center;
+                display: none; /* Hide logo on mobile to save space */
+            }
+            
+            .nav-links {
+                justify-content: center; /* Center nav items when logo is hidden */
+            }
+            
+            .copy-button {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-bottom: 0.5rem;
+                display: block;
+                width: fit-content;
+            }
+            
+            .code-block {
+                padding-top: 3rem;
+            }
+        }
+
+        /* Back to top */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem;
+            border-radius: 50%;
+            text-decoration: none;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.2s;
+            opacity: 0.8;
+        }
+
+        .back-to-top:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-dark);
+            border-top: 1px solid var(--border);
+            padding: 3rem 0;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <img src="https://raw.githubusercontent.com/petarran/shomei/main/assets/logo-icon.png" alt="shōmei logo" width="32" height="32">
+                </a>
+                <nav class="nav-links">
+                    <a href="index.html#installation">Installation</a>
+                    <a href="docs.html" class="active">Documentation</a>
+                    <a href="https://github.com/petarran/shomei" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem; background: var(--secondary); color: white; border-radius: 8px; display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                        </svg>
+                        ⭐ Star
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content -->
+    <main class="content">
+        <div class="container">
+            <div class="docs-layout">
+                <!-- Navigation Sidebar -->
+                <nav class="docs-nav">
+                    <h3>Documentation</h3>
+                    <ul>
+                        <li><a href="#quick-start">Quick Start</a></li>
+                        <li><a href="#commands">Commands</a></li>
+                        <li><a href="#configuration">Configuration</a></li>
+                        <li><a href="#examples">Examples</a></li>
+                        <li><a href="#advanced">Advanced Usage</a></li>
+                        <li><a href="#troubleshooting">Troubleshooting</a></li>
+                    </ul>
+                </nav>
+
+                <!-- Main Content -->
+                <div class="main-content">
+                    <section id="quick-start" class="section">
+                        <h1 class="section-title">shōmei docs</h1>
+                        <p class="section-subtitle">Complete guide to using shōmei for safe repository sanitization</p>
+                        
+                        <h2 class="subsection-title">Quick Start</h2>
+                        <p class="subsection-subtitle">Get up and running with shōmei in minutes</p>
+                        
+                        <div class="command-example">
+                            <h4>1. Install shōmei</h4>
+                            <div class="code-block">
+                                <pre><code>pip install shomei</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="command-example">
+                            <h4>2. Initialize in your repository</h4>
+                            <div class="code-block">
+                                <pre><code>cd /path/to/your/repo
+shomei init</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="command-example">
+                            <h4>3. Process and sanitize</h4>
+                            <div class="code-block">
+                                <pre><code>shomei process . --config config.yml</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="commands" class="section">
+                        <h2 class="subsection-title">Commands Reference</h2>
+                        
+                        <div class="command-example">
+                            <h4>shomei init</h4>
+                            <p>Initialize shōmei configuration in the current directory.</p>
+                            <div class="code-block">
+                                <pre><code>shomei init
+# Creates ~/.shomei/config.yml with your personal details</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="command-example">
+                            <h4>shomei analyze &lt;repo_path&gt;</h4>
+                            <p>Analyze a repository to see what would be processed.</p>
+                            <div class="code-block">
+                                <pre><code>shomei analyze . --config config.yml
+# Shows:
+# - Commit analysis by author
+# - Files that will be stripped/preserved
+# - Repository statistics</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="command-example">
+                            <h4>shomei process &lt;repo_paths...&gt;</h4>
+                            <p>Process and sanitize one or more repositories.</p>
+                            <div class="code-block">
+                                <pre><code># Process current directory
+shomei process
+
+# Process specific repositories
+shomei process /path/to/repo1 /path/to/repo2
+
+# Dry run (preview only)
+shomei process --dry-run /path/to/repo
+
+# Override personal details
+shomei process --personal-email "you@example.com" --personal-name "Your Name" /path/to/repo</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="command-example">
+                            <h4>shomei contribute</h4>
+                            <p>Show information about contributing to shōmei.</p>
+                            <div class="code-block">
+                                <pre><code>shomei contribute</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="configuration" class="section">
+                        <h2 class="subsection-title">Configuration</h2>
+                        <p class="subsection-subtitle">Customize shōmei behavior with configuration files</p>
+                        
+                        <div class="config-section">
+                            <h3>Configuration File: ~/.shomei/config.yml</h3>
+                            
+                            <div class="config-option">
+                                <h4>Personal Information</h4>
+                                <p>Your personal details for sanitized commits.</p>
+                                <div class="code-block">
+                                    <pre><code>personal_name: "Your Name"
+personal_email: "you@example.com"</code></pre>
+                                </div>
+                            </div>
+                            
+                            <div class="config-option">
+                                <h4>Sanitization Settings</h4>
+                                <p>Control how files are processed.</p>
+                                <div class="code-block">
+                                    <pre><code>sanitization:
+  strip_files: true                    <span class="comment"># Replace file contents with placeholder</span>
+  placeholder_text: "[STRIPPED]"       <span class="comment"># Text to use as placeholder</span>
+  keep_structure: true                 <span class="comment"># Preserve directory structure</span>
+  strip_file_extensions: [".py", ".js", ".ts", ".java", ".cpp", ".c", ".h", ".go", ".rs", ".php"]
+  preserve_file_extensions: [".md", ".txt", ".yml", ".yaml", ".json", ".gitignore"]</code></pre>
+                                </div>
+                            </div>
+                            
+                            <div class="config-option">
+                                <h4>Output Settings</h4>
+                                <p>Configure where and how output is generated.</p>
+                                <div class="code-block">
+                                    <pre><code>output:
+  directory: "./sanitized_repo"        <span class="comment"># Output directory</span>
+  create_new_repo: true               <span class="comment"># Create new git repository</span>
+  keep_branches: ["main", "master"]   <span class="comment"># Branches to preserve</span></code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="examples" class="section">
+                        <h2 class="subsection-title">Usage Examples</h2>
+                        
+                        <div class="command-example">
+                            <h4>Basic Repository Sanitization</h4>
+                            <p>Sanitize a single repository with default settings.</p>
+                            <div class="code-block">
+                                <pre><code># Navigate to your repository
+cd /path/to/corporate/repo
+
+# Initialize shōmei (first time only)
+shomei init
+
+# Process the repository
+shomei process .
+
+# The sanitized version is now in ./sanitized_repo/</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="command-example">
+                            <h4>Multiple Repository Processing</h4>
+                            <p>Process multiple repositories at once.</p>
+                            <div class="code-block">
+                                <pre><code># Process multiple repositories
+shomei process /path/to/repo1 /path/to/repo2 /path/to/repo3
+
+# Each gets its own sanitized output directory</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="command-example">
+                            <h4>Dry Run Analysis</h4>
+                            <p>Preview what will happen without making changes.</p>
+                            <div class="code-block">
+                                <pre><code># Analyze what will be processed
+shomei analyze . --config config.yml
+
+# Preview the sanitization process
+shomei process --dry-run .</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="command-example">
+                            <h4>Custom Configuration</h4>
+                            <p>Use a specific configuration file.</p>
+                            <div class="code-block">
+                                <pre><code># Use custom config
+shomei process . --config my_config.yml
+
+# Override personal details
+shomei process . --personal-email "work@example.com" --personal-name "Work Name"</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="advanced" class="section">
+                        <h2 class="subsection-title">Advanced Usage</h2>
+                        
+                        <div class="command-example">
+                            <h4>Selective File Processing</h4>
+                            <p>Customize which files are stripped or preserved.</p>
+                            <div class="code-block">
+                                <pre><code># In your config.yml
+sanitization:
+  strip_file_extensions: [".py", ".js", ".ts"]  <span class="comment"># Strip these file types</span>
+  preserve_file_extensions: [".md", ".txt"]     <span class="comment"># Keep these file types</span>
+  preserve_files: ["README.md", "LICENSE"]      <span class="comment"># Always preserve these files</span>
+  strip_files: ["secrets.json", "config.env"]   <span class="comment"># Always strip these files</span></code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="command-example">
+                            <h4>Custom Placeholder Text</h4>
+                            <p>Use meaningful placeholder text for different file types.</p>
+                            <div class="code-block">
+                                <pre><code># In your config.yml
+sanitization:
+  placeholder_text: "[CORPORATE_CONTENT_REMOVED]"
+  
+  # Or use different placeholders for different file types
+  file_type_placeholders:
+    ".py": "[PYTHON_CODE_STRIPPED]"
+    ".js": "[JAVASCRIPT_CODE_STRIPPED]"
+    ".md": "[DOCUMENTATION_PRESERVED]"</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="command-example">
+                            <h4>Branch and Tag Management</h4>
+                            <p>Control which branches and tags are preserved.</p>
+                            <div class="code-block">
+                                <pre><code># In your config.yml
+output:
+  keep_branches: ["main", "develop", "feature/new-feature"]
+  keep_tags: ["v1.0.0", "v1.1.0"]
+  delete_other_branches: true
+  delete_other_tags: true</code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="troubleshooting" class="section">
+                        <h2 class="subsection-title">Troubleshooting</h2>
+                        
+                        <div class="command-example">
+                            <h4>Common Issues</h4>
+                            
+                            <h5>Permission Denied</h5>
+                            <p>Make sure you have write permissions to the output directory.</p>
+                            <div class="code-block">
+                                <pre><code># Check permissions
+ls -la /path/to/output/directory
+
+# Fix permissions if needed
+chmod 755 /path/to/output/directory</code></pre>
+                            </div>
+                            
+                            <h5>Git Repository Not Found</h5>
+                            <p>Ensure you're in a directory with a .git folder.</p>
+                            <div class="code-block">
+                                <pre><code># Check if it's a git repository
+ls -la .git
+
+# If not, initialize git first
+git init</code></pre>
+                            </div>
+                            
+                            <h5>Configuration File Not Found</h5>
+                            <p>Run <code>shomei init</code> to create the configuration file.</p>
+                            <div class="code-block">
+                                <pre><code># Create default configuration
+shomei init
+
+# Check the config file
+cat ~/.shomei/config.yml</code></pre>
+                            </div>
+                        </div>
+                        
+                        <div class="command-example">
+                            <h4>Getting Help</h4>
+                            <p>Use these commands to get help and information.</p>
+                            <div class="code-block">
+                                <pre><code># Show help
+shomei --help
+
+# Show version
+shomei --version
+
+# Show contributing info
+shomei contribute
+
+# Show logo
+shomei logo</code></pre>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="https://github.com/petarran/shomei">GitHub</a>
+                <a href="https://github.com/petarran/shomei/issues">Issues</a>
+                <a href="https://pypi.org/project/shomei/">PyPI</a>
+            </div>
+            <p>&copy; 2025 shōmei contributors. Licensed under MIT.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Update active navigation link
+        function updateActiveNav() {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.docs-nav a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', updateActiveNav);
+        updateActiveNav();
+    </script>
+</body>
+</html>

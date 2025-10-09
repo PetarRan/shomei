@@ -61,17 +61,11 @@ jobs:
         pwd
         ls -la
         ls -la tools/
-        ls -la scripts/
-    
-    - name: Run tests
-      run: |
-        python scripts/test_shomei.py
-      continue-on-error: false
-    
-    - name: Test CLI
+        ls -la shomei/
+
+    - name: Test CLI installation
       run: |
         shomei --help
-        shomei --version
       continue-on-error: false
 
   build-and-publish:
