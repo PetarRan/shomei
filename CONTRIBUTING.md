@@ -1,16 +1,16 @@
 # Contributing to shōmei
 
-hey! thanks for checking this out. we'd love your help making shōmei better 🎉
+hey! thanks for checking this out. we'd love your help making shōmei better
 
 ## how to contribute
 
 there are tons of ways to help:
 
-- 🐛 **found a bug?** open an issue
-- 💡 **have an idea?** open an issue
-- 📝 **improve docs?** send a PR
-- ✨ **add a feature?** let's talk about it first (open an issue)
-- ⭐ **just like the project?** star it on GitHub!
+- **found a bug?** open an issue
+- **have an idea?** open an issue
+- **improve docs?** send a PR
+- **add a feature?** let's talk about it first (open an issue)
+- **just like the project?** star it on GitHub!
 
 ## getting started
 
@@ -184,4 +184,4 @@ by contributing, you agree that your contributions will be licensed under the MI
 
 thanks for contributing! every bit helps, whether it's code, docs, bug reports, or just spreading the word.
 
-if you're stuck or have questions, open an issue or reach out. we're friendly, promise 😊
+if you're stuck or have questions, open an issue or reach out. we're friendly, promise

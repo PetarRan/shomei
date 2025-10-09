@@ -7,11 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.0] - 2025-10-09
 
-### 🎉 Major Simplification - Complete Rewrite!
+### Major Simplification - Complete Rewrite!
 
 this release is a complete architectural overhaul. shōmei is now much simpler, faster, and more reliable.
 
-### ✨ Added
+### Added
 - **GitHub API-based workflow** - no more local git manipulation, everything happens via API
 - **dry-run mode** (`--dry-run`) - preview what would happen before actually doing it
 - **private repo support** (`--private` flag) - create private mirror repos
@@ -20,31 +20,31 @@ this release is a complete architectural overhaul. shōmei is now much simpler, 
 - **rate limiting** - automatic delays to respect GitHub's API limits
 - **branch reference updates** - commits now properly form a chain (fixes orphaned commits bug)
 
-### 🔧 Changed
+### Changed
 - **single command interface** - just run `shomei`, no more `init`, `analyze`, `process` commands
 - **interactive prompts** - asks for everything you need, step by step
 - **simplified codebase** - went from ~1000 lines across multiple files to ~330 lines in cli.py
 - **casual, friendly tone** - comments and messages are more approachable
 - **better UX** - uses rich panels, progress bars, and colored output
 
-### 🗑️ Removed
+### Removed
 - **configuration files** - no more `config.yml`, everything is interactive now
 - **local git manipulation** - no more creating sanitized repos locally
 - **complex commands** - removed `init`, `analyze`, `process`, `logo`, `contribute`
 - **dependencies** - removed GitPython, PyYAML, colorama (only need click, requests, rich now)
 
-### 🐛 Fixed
+### Fixed
 - **orphaned commits bug** - commits now properly update branch refs
 - **empty repo handling** - better error messages when no commits found
 - **API timeout handling** - graceful handling of network issues
 - **GitHub API errors** - clearer error messages with actionable advice
 
-### 📚 Documentation
+### Documentation
 - **completely rewritten README** - casual, friendly tone with examples
 - **new CONTRIBUTING.md** - clear guide for contributors
 - **updated docs website** - coming in next update
 
-### 🚨 Breaking Changes
+### Breaking Changes
 - **no backward compatibility** - v0.3.0 works completely differently than v0.2.x
 - **removed commands** - `shomei init`, `shomei analyze`, etc. no longer exist
 - **no config files** - if you had a `~/.shomei/config.yml`, it's not used anymore

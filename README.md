@@ -1,6 +1,6 @@
 # shōmei (証明)
 
-> your work deserves to be seen 🎯
+> your work deserves to be seen
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -10,13 +10,13 @@
 
 this CLI tool mirrors your corporate commits to your personal GitHub. no code, no secrets, just timestamps. your contribution graph gets the credit it deserves, and your company's IP stays safe.
 
-![Hero](assets/hero.png)
+![Hero](https://raw.githubusercontent.com/petarran/shomei/main/assets/hero.png)
 
 ## the problem
 
 you've probably seen posts like this:
 
-![problem](assets/screenshot-problem.png)
+![problem](https://raw.githubusercontent.com/petarran/shomei/main/assets/screenshot-problem.png)
 
 look, we all know GitHub's green squares don't define you as a developer. but when you're job hunting and your profile looks dead because you've been shipping code from a work account? that's annoying.
 
@@ -55,7 +55,7 @@ shomei
 # - what to call the mirror repo
 # - your GitHub personal access token
 
-# that's it! check your contribution graph in a few minutes ✨
+# that's it! check your contribution graph in a few minutes
 ```
 
 #### example session
@@ -73,25 +73,25 @@ $ shomei
 current git user: alice@bigcorp.com
 current repo: awesome-app
 
-🎯 your personal GitHub username: alicecodes
-📦 what should we call the mirror repo? (awesome-app-mirror):
-🔑 GitHub personal access token (needs 'repo' permissions): [hidden]
+your personal GitHub username: alicecodes
+what should we call the mirror repo? (awesome-app-mirror):
+GitHub personal access token (needs 'repo' permissions): [hidden]
 
-🔍 scanning commit history...
-✨ found 247 commits by you
+scanning commit history...
+found 247 commits by you
 
-📦 creating GitHub repository...
-✅ repo created: github.com/alicecodes/awesome-app-mirror
+creating GitHub repository...
+repo created: github.com/alicecodes/awesome-app-mirror
 
-✍️  creating 247 empty commits...
-⠋ mirroring commits... ━━━━━━━━━━━━━━━━━━━━━━━━ 100%
+creating 247 empty commits...
+mirroring commits... ━━━━━━━━━━━━━━━━━━━━━━━━ 100%
 
-🎉 SUCCESS!
+SUCCESS!
 
 mirrored 247 commits to your personal GitHub.
 check it out: github.com/alicecodes/awesome-app-mirror
 
-your contribution graph should update in a few minutes ✨
+your contribution graph should update in a few minutes
 ```
 
 ### options
@@ -158,7 +158,7 @@ shomei --help
 ## faq
 
 **Q: Is this safe?**
-A: yes. shomei only sends commit dates to GitHub's API. no code, no commit messages (beyond "work happened here 💼"), no file names. your company's IP never touches the internet.
+A: yes. shomei only sends commit dates to GitHub's API. no code, no commit messages (beyond "work happened here"), no file names. your company's IP never touches the internet.
 
 **Q: Will this get me in trouble?**
 A: we're not lawyers, but: you're not exposing any proprietary code or information. just timestamps. that said, check your company's policies if you're worried.
@@ -196,6 +196,6 @@ built with:
 
 ---
 
-**made with ❤️ for developers who actually ship code**
+made with love for developers who actually ship code
 
-if this helped you, give it a ⭐ on GitHub!
+if this helped you, give it a star on GitHub!
