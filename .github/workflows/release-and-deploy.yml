@@ -3,9 +3,7 @@ name: Release and Deploy
 on:
   push:
     branches:
-      - "major/**"
-      - "minor/**"
-      - "patch/**"
+      - main
 
 jobs:
   release-and-deploy:
@@ -47,5 +45,5 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          echo "Uploading to PyPI..."
+          echo "Uploading package to PyPI..."
           twine upload --verbose dist/*
