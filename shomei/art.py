@@ -78,49 +78,37 @@ show off your coding contributions safely
 """
 
 def get_logo(style="text"):
-    """get the logo in the specified style."""
     return SHOMEI_LOGO
 
 def get_welcome_message():
-    """get the welcome message for new users."""
     return WELCOME_MESSAGE
 
 def get_install_success():
-    """get the installation success message."""
     return INSTALL_SUCCESS
 
 def get_contributing_message():
-    """get the contributing message."""
     return CONTRIBUTING_MESSAGE
 
 def get_safety_reminder():
-    """get the safety reminder."""
     return SAFETY_REMINDER
 
 def get_version_info(version):
-    """get version information."""
     return VERSION_INFO.format(version=version)
 
 def print_logo(style="text"):
-    """print the logo to stdout."""
     print(get_logo(style))
 
 def print_welcome():
-    """print the welcome message."""
     print(get_welcome_message())
 
 def print_install_success():
-    """print the installation success message."""
     print(get_install_success())
 
 def print_contributing():
-    """print the contributing message."""
     print(get_contributing_message())
 
 def print_safety_reminder():
-    """print the safety reminder."""
     print(get_safety_reminder())
 
 def print_version_info(version):
-    """print version information."""
     print(get_version_info(version))

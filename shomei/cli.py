@@ -1,177 +1,329 @@
 #!/usr/bin/env python3
 """
-Main CLI entry point for shōmei.
+shōmei - mirror your work commits to personal GitHub without leaking IP.
+super simple, super safe.
 """
 
 import click
-import sys
-from pathlib import Path
+import subprocess
+import requests
+import time
+from datetime import datetime
 from rich.console import Console
+from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.panel import Panel
-from rich.text import Text
 
-from .core import ShomeiProcessor
-from .config import Config
-from .utils import setup_logging
-from .art import print_logo, print_welcome, print_contributing, print_safety_reminder, print_version_info
+from .art import print_logo
 
 console = Console()
 
 
-@click.group()
-@click.version_option(version="0.1.0", prog_name="shōmei")
-@click.option("--verbose", "-v", is_flag=True, help="Enable verbose logging")
-@click.option("--config", "-c", type=click.Path(exists=True), help="Path to config file")
-@click.pass_context
-def cli(ctx, verbose, config):
-    """
-    shōmei - Show off your coding contributions without leaking corporate IP.
-    
-    Transforms your private commits into safe, sanitized commits and publishes them
-    to your personal GitHub profile so your contribution graph reflects your real effort.
-    """
-    ctx.ensure_object(dict)
-    ctx.obj['verbose'] = verbose
-    ctx.obj['config'] = config
-    
-    # Setup logging
-    setup_logging(verbose)
-    
-    # Display ASCII logo
-    print_logo("text")  # You can change to "geometric" if you prefer
-    
-    # Display banner
-    banner = Text("shōmei", style="bold blue")
-    subtitle = Text("Show off your coding contributions safely", style="italic")
-    console.print(Panel(f"{banner}\n{subtitle}", style="blue"))
+def get_git_user_email():
+    """grab the current git user email."""
+    try:
+        result = subprocess.run(['git', 'config', 'user.email'],
+                              capture_output=True, text=True, check=True)
+        return result.stdout.strip()
+    except subprocess.CalledProcessError:
+        return None
 
 
-@cli.command()
-@click.argument('repo_paths', nargs=-1, type=click.Path(exists=True))
-@click.option('--personal-email', '-e', help='Your personal email for commits')
-@click.option('--personal-name', '-n', help='Your personal name for commits')
-@click.option('--placeholder-text', '-p', default='[STRIPPED] Corporate content removed for privacy', 
-              help='Text to replace file contents with')
-@click.option('--dry-run', is_flag=True, help='Preview changes without applying them')
-@click.option('--output-dir', '-o', type=click.Path(), help='Output directory for sanitized repo')
-@click.pass_context
-def process(ctx, repo_paths, personal_email, personal_name, placeholder_text, dry_run, output_dir):
+def get_repo_name():
+    """figure out what repo we're in right now."""
+    try:
+        result = subprocess.run(['git', 'remote', 'get-url', 'origin'],
+                              capture_output=True, text=True, check=True)
+        url = result.stdout.strip()
+        # extract repo name from URLs like: https://github.com/user/repo.git
+        return url.split('/')[-1].replace('.git', '')
+    except subprocess.CalledProcessError:
+        return "unknown-repo"
+
+
+def get_commits_by_author(email):
+    """get all your commits (just the dates, nothing else)."""
+    try:
+        result = subprocess.run([
+            'git', 'log', '--author', email, '--pretty=format:%H|%ad|%s', '--date=iso'
+        ], capture_output=True, text=True, check=True)
+
+        commits = []
+        for line in result.stdout.strip().split('\n'):
+            if '|' in line and line.strip():
+                parts = line.split('|', 2)
+                if len(parts) >= 2:
+                    commit_hash, date_str = parts[0], parts[1]
+                    # parse the ISO date
+                    date = datetime.fromisoformat(date_str.strip().replace(' ', 'T').split('+')[0].split('-')[0])
+                    commits.append({'hash': commit_hash, 'date': date})
+
+        return commits
+    except subprocess.CalledProcessError:
+        return []
+
+
+def create_github_repo(username, repo_name, token, private=False):
+    """create a fresh repo on your personal GitHub."""
+    url = "https://api.github.com/user/repos"
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+    data = {
+        "name": repo_name,
+        "description": "📊 mirrored commit history (no code, just green squares)",
+        "private": private,
+        "auto_init": True  # creates main branch automatically
+    }
+
+    response = requests.post(url, json=data, headers=headers, timeout=10)
+
+    if response.status_code == 201:
+        console.print(f"[green]✅ repo created: github.com/{username}/{repo_name}[/green]")
+        return True
+    elif response.status_code == 422:
+        # repo already exists, that's cool
+        console.print(f"[yellow]⚠️  repo already exists, we'll add commits to it[/yellow]")
+        return True
+    else:
+        console.print(f"[red]❌ couldn't create repo: {response.json().get('message', 'unknown error')}[/red]")
+        return False
+
+
+def get_main_branch_sha(username, repo_name, token):
+    """get the current SHA of the main branch."""
+    url = f"https://api.github.com/repos/{username}/{repo_name}/git/refs/heads/main"
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+
+    response = requests.get(url, headers=headers, timeout=10)
+    if response.status_code == 200:
+        return response.json()['object']['sha']
+    return None
+
+
+def create_empty_commit(username, repo_name, date, token, parent_sha=None):
     """
-    Process one or more repositories and create sanitized versions.
-    
-    REPO_PATHS: Paths to repositories to process (defaults to current directory)
+    create an empty commit via GitHub API.
+    this is where the magic happens - we're creating commits with your dates
+    but zero code. just timestamps. your contribution graph gets updated,
+    but no company IP leaves your machine.
     """
-    if not repo_paths:
-        repo_paths = ['.']
-    
-    # Load config
-    config = Config(ctx.obj.get('config'))
-    
-    # Override config with CLI options
-    if personal_email:
-        config.personal_email = personal_email
-    if personal_name:
-        config.personal_name = personal_name
-    if placeholder_text:
-        config.placeholder_text = placeholder_text
-    
-    # Validate config
-    if not config.is_valid():
-        console.print("[red]Error: Invalid configuration. Please set personal email and name.[/red]")
-        console.print("Use --personal-email and --personal-name options or create a config file.")
-        sys.exit(1)
-    
-    # Process each repository
-    for repo_path in repo_paths:
-        console.print(f"\n[bold]Processing repository:[/bold] {repo_path}")
-        
-        try:
-            processor = ShomeiProcessor(repo_path, config)
-            
-            if dry_run:
-                console.print("[yellow]DRY RUN MODE - No changes will be applied[/yellow]")
-                processor.dry_run()
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+
+    try:
+        # step 1: get the current tree (or create an empty one)
+        if parent_sha:
+            # get the tree from the parent commit
+            commit_url = f"https://api.github.com/repos/{username}/{repo_name}/git/commits/{parent_sha}"
+            commit_response = requests.get(commit_url, headers=headers, timeout=10)
+            if commit_response.status_code == 200:
+                tree_sha = commit_response.json()['tree']['sha']
             else:
-                processor.process()
-                
-        except Exception as e:
-            console.print(f"[red]Error processing {repo_path}: {e}[/red]")
-            if ctx.obj.get('verbose'):
-                console.print_exception()
-            sys.exit(1)
+                return None, "couldn't get parent tree"
+        else:
+            # create an empty tree
+            tree_url = f"https://api.github.com/repos/{username}/{repo_name}/git/trees"
+            tree_response = requests.post(tree_url, json={"tree": []}, headers=headers, timeout=10)
+            if tree_response.status_code != 201:
+                return None, "couldn't create tree"
+            tree_sha = tree_response.json()['sha']
+
+        # step 2: create the commit
+        commit_url = f"https://api.github.com/repos/{username}/{repo_name}/git/commits"
+        commit_data = {
+            "message": "work happened here 💼",
+            "tree": tree_sha,
+            "parents": [parent_sha] if parent_sha else [],
+            "author": {
+                "name": username,
+                "email": f"{username}@users.noreply.github.com",
+                "date": date.strftime('%Y-%m-%dT%H:%M:%SZ')
+            },
+            "committer": {
+                "name": username,
+                "email": f"{username}@users.noreply.github.com",
+                "date": date.strftime('%Y-%m-%dT%H:%M:%SZ')
+            }
+        }
+
+        commit_response = requests.post(commit_url, json=commit_data, headers=headers, timeout=10)
+
+        if commit_response.status_code == 201:
+            return commit_response.json()['sha'], None
+        else:
+            return None, commit_response.json().get('message', 'unknown error')
+
+    except requests.exceptions.Timeout:
+        return None, "request timeout"
+    except Exception as e:
+        return None, str(e)
 
 
-@cli.command()
-@click.option('--config-path', '-c', default='~/.shomei/config.yml', 
-              help='Path to config file')
-@click.pass_context
-def init(ctx, config_path):
-    """
-    Initialize configuration file with your personal details.
-    """
-    # Show welcome message for first-time users
-    print_welcome()
-    print()  # Add spacing
-    
-    config_path = Path(config_path).expanduser()
-    
-    if config_path.exists():
-        if not click.confirm(f"Config file {config_path} already exists. Overwrite?"):
-            return
-    
-    # Get user input
-    personal_name = click.prompt("Enter your personal name for commits")
-    personal_email = click.prompt("Enter your personal email for commits")
-    
-    # Create config
-    config = Config()
-    config.personal_name = personal_name
-    config.personal_email = personal_email
-    
-    # Save config
-    config.save(config_path)
-    console.print(f"[green]Configuration saved to {config_path}[/green]")
-    
-    # Show next steps and contributing info
-    print()
-    print_contributing()
-    print()
-    print_safety_reminder()
+def update_branch_ref(username, repo_name, token, commit_sha):
+    """update the main branch to point to our new commit."""
+    url = f"https://api.github.com/repos/{username}/{repo_name}/git/refs/heads/main"
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+    data = {
+        "sha": commit_sha,
+        "force": True
+    }
+
+    response = requests.patch(url, json=data, headers=headers, timeout=10)
+    return response.status_code == 200
 
 
-@cli.command()
-def logo():
+@click.command()
+@click.option('--private', is_flag=True, help='make the mirror repo private')
+@click.option('--dry-run', is_flag=True, help='preview what would happen without actually doing it')
+def cli(private, dry_run):
     """
-    Display the shōmei ASCII logo.
+    shōmei - proof of your work 🎯
+
+    mirrors your corporate commits to personal GitHub.
+    no code, no secrets, just green squares.
+
+    run this from inside any git repo where you've been committing with your
+    work email, and it'll create a matching commit history on your personal
+    GitHub. your contribution graph gets updated, recruiters stop thinking
+    you've been on vacation for a year, everyone's happy.
     """
+    # show the logo because it looks sick
     print_logo()
 
+    # figure out where we are
+    corporate_email = get_git_user_email()
+    if not corporate_email:
+        console.print("[red]❌ no git user found. are you in a git repo?[/red]")
+        console.print("[dim]try: git config user.email[/dim]")
+        return
 
-@cli.command()
-def contribute():
-    """
-    Show information about contributing to shōmei.
-    """
-    print_contributing()
+    repo_name = get_repo_name()
 
+    console.print(f"[bold cyan]current git user:[/bold cyan] {corporate_email}")
+    console.print(f"[bold cyan]current repo:[/bold cyan] {repo_name}")
+    console.print()
 
-@cli.command()
-@click.argument('repo_path', type=click.Path(exists=True))
-@click.pass_context
-def analyze(ctx, repo_path):
-    """
-    Analyze a repository to show what would be processed.
-    """
-    try:
-        # Load config from context
-        config = Config(ctx.obj.get('config'))
-        processor = ShomeiProcessor(repo_path, config)
-        processor.analyze()
-    except Exception as e:
-        console.print(f"[red]Error analyzing {repo_path}: {e}[/red]")
-        if ctx.obj.get('verbose'):
-            console.print_exception()
-        sys.exit(1)
+    # get the user's info
+    personal_username = click.prompt("🎯 your personal GitHub username")
+
+    suggested_name = f"{repo_name}-mirror"
+    mirror_repo_name = click.prompt("📦 what should we call the mirror repo?", default=suggested_name)
+
+    if dry_run:
+        console.print("\n[yellow]🔍 DRY RUN MODE - nothing will actually be created[/yellow]\n")
+    else:
+        token = click.prompt("🔑 GitHub personal access token (needs 'repo' permissions)", hide_input=True)
+
+    console.print()
+
+    # get all commits by this email
+    with console.status("[bold cyan]🔍 scanning commit history...[/bold cyan]"):
+        commits = get_commits_by_author(corporate_email)
+
+    if not commits:
+        console.print("[yellow]⚠️  no commits found for your email in this repo[/yellow]")
+        console.print(f"[dim]make sure you have commits with {corporate_email}[/dim]")
+        return
+
+    console.print(f"[green]✨ found {len(commits)} commits by you[/green]\n")
+
+    if dry_run:
+        console.print(Panel.fit(
+            f"[bold]would create:[/bold]\n"
+            f"• repo: github.com/{personal_username}/{mirror_repo_name}\n"
+            f"• commits: {len(commits)} empty commits\n"
+            f"• visibility: {'private' if private else 'public'}\n"
+            f"• date range: {commits[-1]['date'].strftime('%Y-%m-%d')} to {commits[0]['date'].strftime('%Y-%m-%d')}",
+            title="Preview",
+            border_style="yellow"
+        ))
+        console.print("\n[dim]run without --dry-run to actually do it[/dim]")
+        return
+
+    # create the repo
+    console.print("[cyan]📦 creating GitHub repository...[/cyan]")
+    if not create_github_repo(personal_username, mirror_repo_name, token, private):
+        return
+
+    # wait a sec for GitHub to catch up
+    time.sleep(2)
+
+    # get the initial branch SHA
+    parent_sha = get_main_branch_sha(personal_username, mirror_repo_name, token)
+
+    # create all the commits
+    console.print(f"\n[cyan]✍️  creating {len(commits)} empty commits...[/cyan]")
+
+    success_count = 0
+    failed_commits = []
+
+    # sort commits chronologically (oldest first)
+    commits_sorted = sorted(commits, key=lambda x: x['date'])
+
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        console=console
+    ) as progress:
+        task = progress.add_task("mirroring commits...", total=len(commits_sorted))
+
+        for i, commit in enumerate(commits_sorted):
+            new_sha, error = create_empty_commit(
+                personal_username,
+                mirror_repo_name,
+                commit['date'],
+                token,
+                parent_sha
+            )
+
+            if new_sha:
+                # update the branch to point to this new commit
+                if update_branch_ref(personal_username, mirror_repo_name, token, new_sha):
+                    parent_sha = new_sha  # this becomes the parent for the next commit
+                    success_count += 1
+                else:
+                    failed_commits.append((i, error or "couldn't update branch"))
+            else:
+                failed_commits.append((i, error or "unknown error"))
+
+            progress.update(task, advance=1)
+
+            # be nice to GitHub's API (rate limiting)
+            if i % 10 == 0 and i > 0:
+                time.sleep(1)
+
+    # show results
+    console.print()
+    if success_count == len(commits):
+        console.print(Panel.fit(
+            f"[bold green]🎉 SUCCESS![/bold green]\n\n"
+            f"mirrored {success_count} commits to your personal GitHub.\n"
+            f"check it out: [link=https://github.com/{personal_username}/{mirror_repo_name}]github.com/{personal_username}/{mirror_repo_name}[/link]\n\n"
+            f"[dim]your contribution graph should update in a few minutes ✨[/dim]",
+            border_style="green"
+        ))
+    else:
+        console.print(Panel.fit(
+            f"[bold yellow]⚠️  PARTIAL SUCCESS[/bold yellow]\n\n"
+            f"created {success_count}/{len(commits)} commits\n"
+            f"failed: {len(failed_commits)} commits\n\n"
+            f"repo: [link=https://github.com/{personal_username}/{mirror_repo_name}]github.com/{personal_username}/{mirror_repo_name}[/link]",
+            border_style="yellow"
+        ))
+
+        if failed_commits and len(failed_commits) < 10:
+            console.print("\n[dim]failed commits:[/dim]")
+            for idx, error in failed_commits[:5]:
+                console.print(f"[dim]  • commit {idx + 1}: {error}[/dim]")
 
 
 if __name__ == '__main__':

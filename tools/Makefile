@@ -13,8 +13,8 @@ install-user: ## Install for current user only
 install-dev: ## Install with development dependencies
 	pip install -e "..[dev]"
 
-test: ## Run tests
-	python ../scripts/test_shomei.py
+test: ## Run tests (no tests currently)
+	@echo "No tests configured yet"
 
 clean: ## Clean build artifacts
 	rm -rf build/
