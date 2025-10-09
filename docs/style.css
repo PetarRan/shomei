@@ -145,6 +145,10 @@ body {
     color: white;
 }
 
+nav a.btn-secondary {
+    color: white;
+}
+
 .btn-secondary:hover {
     background: var(--text);
 }
