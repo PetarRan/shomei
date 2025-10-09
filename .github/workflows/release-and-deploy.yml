@@ -1,10 +1,11 @@
-name: Release, Publish & Deploy
+name: "Release and Deploy: ${{ github.event.head_commit.message }}"
 
 on:
   push:
     branches:
-      - 'release/**'
-      - 'patch/**'
+      - "major/**"
+      - "minor/**"
+      - "patch/**"
 
 jobs:
   release-and-deploy:
@@ -12,127 +13,38 @@ jobs:
     permissions:
       contents: write
       packages: write
-      pages: write
       id-token: write
 
     steps:
-    # Checkout code
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    # Setup Python
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.12'
-        cache: 'pip'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+          cache: "pip"
 
-    # Install dependencies
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r tools/requirements.txt
-        pip install -e .
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r tools/requirements.txt
+          pip install -e .
 
-    # Test CLI
-    - name: Test CLI installation
-      run: |
-        shomei --help
+      - name: Test CLI
+        run: shomei --help
 
-    # Build package
-    - name: Build package
-      run: |
-        pip install build twine
-        python -m build
-        echo "Built packages:"
-        ls -la dist/
+      - name: Build package
+        run: |
+          pip install build twine
+          python -m build
+          echo "Built packages:"
+          ls -la dist/
 
-    # Publish to PyPI
-    - name: Publish to PyPI
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      run: |
-        echo "Uploading to PyPI..."
-        twine upload --verbose dist/*
-
-    # Setup GitHub Pages
-    - name: Setup Pages
-      uses: actions/configure-pages@v4
-
-    # Upload docs as artifact
-    - name: Upload GitHub Pages artifact
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: docs
-
-    # Deploy to GitHub Pages
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
-
-    # Create GitHub Release
-    - name: Extract version from branch
-      id: version
-      run: |
-        BRANCH_NAME="${GITHUB_REF#refs/heads/}"
-        if [[ $BRANCH_NAME == release/* ]]; then
-          VERSION="${BRANCH_NAME#release/}"
-        elif [[ $BRANCH_NAME == patch/* ]]; then
-          VERSION="${BRANCH_NAME#patch/}"
-        fi
-        echo "version=$VERSION" >> $GITHUB_OUTPUT
-        echo "Detected version: $VERSION"
-
-    - name: Create GitHub Release
-      uses: actions/github-script@v7
-      with:
-        script: |
-          const version = '${{ steps.version.outputs.version }}';
-
-          try {
-            // Check if release already exists
-            try {
-              const existingRelease = await github.rest.repos.getReleaseByTag({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                tag: `v${version}`
-              });
-              console.log(`Release v${version} already exists, skipping creation`);
-              return;
-            } catch (e) {
-              // Release doesn't exist, continue with creation
-            }
-
-            // Create tag first
-            const tagExists = await github.rest.git.getRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: `tags/v${version}`
-            }).catch(() => null);
-
-            if (!tagExists) {
-              await github.rest.git.createRef({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                ref: `refs/tags/v${version}`,
-                sha: context.sha
-              });
-              console.log(`Created tag v${version}`);
-            }
-
-            // Create release
-            const { data: release } = await github.rest.repos.createRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag_name: `v${version}`,
-              name: `Release v${version}`,
-              body: `## shōmei v${version}\n\n### What's Changed\n\nCheck the [CHANGELOG](https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/docs/CHANGELOG.md) for full details.\n\n### Installation\n\n\`\`\`bash\npip install shomei==${version}\n\`\`\`\n\n### Documentation\n\n- [GitHub Pages](https://${context.repo.owner}.github.io/${context.repo.repo}/)\n- [PyPI](https://pypi.org/project/shomei/${version}/)\n\n---\n\nAutomatic release from GitHub Actions`,
-              draft: false,
-              prerelease: version.includes('alpha') || version.includes('beta') || version.includes('rc')
-            });
-            console.log(`Release created successfully: ${release.html_url}`);
-          } catch (error) {
-            console.error('Failed to create GitHub release:', error.message);
-            // Don't fail the workflow if release creation fails
-          }
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          echo "Uploading to PyPI..."
+          twine upload --verbose dist/*
