@@ -80,11 +80,22 @@ GitHub personal access token (needs 'repo' permissions): [hidden]
 scanning commit history...
 found 247 commits by you
 
+ready to create:
+• repo: github.com/alicecodes/awesome-app-mirror
+• commits: 247 empty commits
+• visibility: public
+• date range: 2024-01-15 to 2025-10-10
+
+proceed with creating the mirror repo? [Y/n]: y
+
 creating GitHub repository...
 repo created: github.com/alicecodes/awesome-app-mirror
 
 creating 247 empty commits...
 mirroring commits... ━━━━━━━━━━━━━━━━━━━━━━━━ 100%
+
+creating README...
+✅ README created
 
 SUCCESS!
 
@@ -97,6 +108,9 @@ your contribution graph should update in a few minutes
 ### options
 
 ```bash
+# check your shomei version
+shomei --version
+
 # preview what would happen (no changes made)
 shomei --dry-run
 
@@ -110,7 +124,8 @@ shomei --private
 2. extracts just the commit dates (nothing else!)
 3. creates a new repo on your personal GitHub
 4. uses GitHub's API to create empty commits with those dates
-5. boom, your contribution graph now shows your real activity
+5. generates a beautiful README for your mirrored repo
+6. boom, your contribution graph now shows your real activity
 
 **important**: no code ever leaves your machine. we only send timestamps to GitHub's API. your company's IP stays exactly where it is.
 

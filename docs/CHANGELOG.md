@@ -1,185 +1,179 @@
-# Changelog
+# shōmei v1.0.1 - Documentation & Code Cleanup -- 10th Oct. 2025
 
-All notable changes to this project will be documented in this file.
+### what's changed?
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+### documentation updates
 
-## [1.0.0] - 2025-10-10 🚀
+- **updated README.md** - added new features (input validation, auto-README generation)
+- **updated example session** - shows confirmation prompt and README creation steps
+- **updated docs.html** - added `--version` flag, updated "how it works" section
 
-### 🎉 First Stable Release!
+### no breaking changes
 
-shōmei has reached 1.0.0! this release adds robust validation, better user experience, and automatic marketing for your mirrored repos.
+- this is a documentation and cleanup release
+- all functionality from v1.0.0 works the same
 
-### Added
-- **input validation for repo names** - validates against GitHub's rules, rejects invalid characters and provides helpful error messages with retry loop
-- **GitHub token format validation** - warns if token doesn't match expected format (ghp_* or github_pat_*)
-- **confirmation prompt** - shows a summary panel and asks for confirmation before creating the repo and commits
-- **automatic rich README generation** - creates a beautiful, marketing-ready README.md in the mirrored repo with:
-  - shōmei badges and branding (purple badge + commit count)
-  - stats about the mirrored commits (count, date range, zero code leaked)
-  - explanation of what the repo is and why it exists
-  - links back to shōmei project with installation instructions
-  - call-to-action to star shōmei on GitHub
-  - professional formatting with badges, sections, and footer
+---
 
-### Changed
-- **better error messages** - all validation errors now provide clear, actionable feedback
-- **improved UX flow** - validation happens at input time with retry loops for invalid input
-- **enhanced summary panel** - shows exactly what will be created (repo URL, commit count, visibility, date range) before proceeding
-- **README is auto-created** - every mirrored repo now has a rich, informative README instead of GitHub's default
+# shōmei v1.0.0 - First Stable Release! -- 10th Oct. 2025
 
-### Fixed
-- **prevents garbage input** - users can no longer input invalid repo names with special characters or spaces
-- **better token feedback** - warns about potentially invalid tokens before API calls fail
+### what's changed?
 
-### Developer Experience
-- cleaner code organization with dedicated validation functions
-- better separation of concerns
-- more maintainable codebase
+### input validation
 
-## [0.3.2] - 2025-10-10
+- **repository name validation**
+- **token format validation**
+- **confirmation prompts**
 
-### Fixed
-- date parsing bug that caused ValueError when running shomei
-- was splitting the date string wrong, ended up with just "2025" instead of the full datetime
+### automatic README.md generation
 
-## [0.3.0] - 2025-10-09
+- every mirrored repository now gets a **beautiful README**.
 
-### Major Simplification - Complete Rewrite!
+This means **every user becomes a promoter** of shōmei! :)
 
-this release is a complete architectural overhaul. shōmei is now much simpler, faster, and more reliable.
+### Arch changes
 
-### Added
-- **GitHub API-based workflow** - no more local git manipulation, everything happens via API
-- **dry-run mode** (`--dry-run`) - preview what would happen before actually doing it
+- **cli.py** reduced from 570 to 223 lines
+- split into 6 modules (validators, git_utils, github_api, readme_generator)
+- easy for new contributors to understand and extend
+
+### new features
+
+- `--version` flag to check your shōmei version
+
+### code quality
+
+- removed 97 lines of dead code
+- a bit more maintainable codebase
+
+## breaking Cchanges
+
+- nada
+
+### installation
+
+```bash
+pip install shomei
+```
+
+### quick start
+
+```
+cd ~/work/your-repo
+shomei
+```
+
+---
+
+# shōmei v0.3.2 - Data parsing patch -- 9th Oct. 2025
+
+## fix: v0.3.2 - date parsing error fixed a bug where shomei crashed with a ValueError when parsing commit dates.
+
+the date parsing logic was doing an extra split that left just the year instead of the full datetime. what changed:
+
+- removed the bad .split('-')[0] that was breaking things
+- dates now parse correctly
+
+---
+
+# shōmei v0.3.1 - CI/CD patch -- 9th Oct. 2025
+
+## what's changed
+
+just a simple patch to fix the CI/CD and a quick cleanup of the `docs/` folder.
+
+### fixes
+
+- **Fixed CI/CD** - Unified workflow would cause errors
+- **New conditions for Release workflow** - Only runs when pushing to main, meaning, when a PR is merged
+- **New conditions for Deploy workflow** - Deploy to GH pages only when changes were made in the `/docs` folder and pushed to main
+
+---
+
+# shōmei v0.3.0 - big refactor -- 9th Oct. 2025
+
+## what's changed
+
+this is a complete architectural overhaul. shōmei is now way simpler, faster, and more reliable.
+
+### new features
+
+- **GitHub API-based workflow** - everything via API
+- **dry-run mode** (`--dry-run`) - preview before you commit (pun intended)
 - **private repo support** (`--private` flag) - create private mirror repos
-- **progress indicators** - beautiful progress bars and status updates
-- **better error handling** - clear error messages with suggestions
-- **rate limiting** - automatic delays to respect GitHub's API limits
-- **branch reference updates** - commits now properly form a chain (fixes orphaned commits bug)
+- **progress indicators** - beautiful progress bars showing real-time status
+- **better error handling** - clear messages with actionable suggestions
+- **rate limiting** - automatic delays to respect GitHub's API
+- **proper branch refs** - commits now form a proper chain (fixes orphaned commits bug)
 
-### Changed
-- **single command interface** - just run `shomei`, no more `init`, `analyze`, `process` commands
-- **interactive prompts** - asks for everything you need, step by step
-- **simplified codebase** - went from ~1000 lines across multiple files to ~330 lines in cli.py
-- **casual, friendly tone** - comments and messages are more approachable
-- **better UX** - uses rich panels, progress bars, and colored output
+### changes
 
-### Removed
-- **configuration files** - no more `config.yml`, everything is interactive now
+- **single command** - just run `shomei`, no more `init`/`analyze`/`process`
+- **interactive prompts** - asks for everything step by step
+- **70% less code** - went from ~1000 lines to ~330 lines in cli.py
+- **better UX** - I think that at least, if you think I'm wrong, feel free to contribute
+
+### à la poubelle
+
+- **config files** - no more `config.yml`, everything is interactive through the terminal
 - **local git manipulation** - no more creating sanitized repos locally
 - **complex commands** - removed `init`, `analyze`, `process`, `logo`, `contribute`
-- **dependencies** - removed GitPython, PyYAML, colorama (only need click, requests, rich now)
+- **dependencies** - removed GitPython, PyYAML, colorama (not needed!!!)
 
-### Fixed
+### fixes
+
 - **orphaned commits bug** - commits now properly update branch refs
-- **empty repo handling** - better error messages when no commits found
-- **API timeout handling** - graceful handling of network issues
-- **GitHub API errors** - clearer error messages with actionable advice
+- **API timeout handling** - graceful network error handling
+- **empty repo handling** - better error messages
+- **GitHub API errors** - clearer messages with help
 
 ### Documentation
-- **completely rewritten README** - casual, friendly tone with examples
-- **new CONTRIBUTING.md** - clear guide for contributors
-- **updated docs website** - coming in next update
+
+- **rewrote README**
+- **new CONTRIBUTING.md**
+- **modernized docs site** - separated CSS/JS, I'll come back to this later
 
 ### Breaking Changes
-- **no backward compatibility** - v0.3.0 works completely differently than v0.2.x
-- **removed commands** - `shomei init`, `shomei analyze`, etc. no longer exist
-- **no config files** - if you had a `~/.shomei/config.yml`, it's not used anymore
-- **new workflow** - just run `shomei` from any git repo, follow the prompts
 
-### Migration from v0.2.x
+**yes, this is a breaking release.** v0.3.0 works completely differently than v0.2.x.
 
-if you were using v0.2.x, here's how to migrate:
+**old way (v0.2.x):**
 
-**old way:**
 ```bash
+cd /path/to/repo
+
 shomei init
 shomei analyze /path/to/repo
 shomei process /path/to/repo
 ```
 
-**new way:**
+new way (v0.3.0):
+
 ```bash
 cd /path/to/repo
 shomei
 ```
 
-that's it! much simpler.
+---
 
-### Why the big change?
+# Release v0.2.5 -- 22nd Aug. 2025
 
-the old architecture was overengineered. it tried to do too much: config files, local repo sanitization, multiple commands, etc. most users just wanted one thing: mirror my commits to GitHub.
+### What's New in v0.2.5
 
-v0.3.0 does exactly that, and nothing more. it's faster, simpler, and harder to mess up.
+- Automated release from GitHub Actions
+- Package published to PyPI
+- All tests passed successfully
 
-## [0.2.5] - 2025-08-23
+### Installation
 
-### Added
-- Homebrew formula for easy macOS/Linux installation
-- Custom tap repository setup
-- Automated dependency installation in Homebrew formula
+```
+pip install shomei
+```
 
-### Fixed
-- Homebrew installation now properly installs all Python dependencies
-- Formula includes correct SHA256 hash for v0.2.4 release
+### What's Changed
 
-## [0.2.4] - 2025-08-22
-
-### Added
-- GitHub Pages website with modern design
-- Interactive documentation site
-- Copy-to-clipboard functionality for code blocks
-- Responsive design for mobile and desktop
-- Integration with GitHub API for star counts
-
-### Changed
-- Updated website color scheme to match brand colors
-- Improved navigation and user experience
-- Streamlined installation instructions
-
-## [0.2.3] - 2025-08-22
-
-### Added
-- ASCII art logo with "shōmei" text
-- Terminal welcome messages and safety reminders
-- Contributing information display
-- Logo command for displaying ASCII art
-
-### Changed
-- Enhanced CLI user experience with informative messages
-- Improved project organization and structure
-
-## [0.2.1] - 2025-08-22
-
-### Added
-- GitHub Actions workflow for automated releases
-- PyPI publishing automation
-- Automated testing on multiple Python versions
-- Release workflow triggers on version tags only
-
-### Fixed
-- Resolved Python version compatibility issues in CI/CD
-- Fixed PyPI authentication and release creation
-
-## [0.2.0] - 2025-08-22
-
-### Added
 - Initial release of shōmei CLI tool
-- Core functionality for repository sanitization
-- CLI commands: init, analyze, process, logo, contribute
-- Configuration file support
-- Git operations and commit rewriting
-- File content stripping with placeholders
-- Branch and tag cleanup
-- Multi-repository support
-- Beautiful ASCII art and user experience
-- Comprehensive documentation
+- Safe repository sanitization for GitHub contributions
+- IP protection without losing contribution history
 
-### Technical Details
-- Python 3.10+ support
-- Dependencies: GitPython, Click, Rich, PyYAML
-- MIT License
-- GitHub Actions CI/CD
-- PyPI distribution ready
+---
