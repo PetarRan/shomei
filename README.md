@@ -134,6 +134,7 @@ got ideas? found a bug? want to add a feature? hell yeah, we'd love your help!
 check out [CONTRIBUTING.md](CONTRIBUTING.md) for how to get started.
 
 quick version:
+
 1. fork it
 2. make your changes
 3. test it
@@ -158,7 +159,7 @@ shomei --help
 ## faq
 
 **Q: Is this safe?**
-A: yes. shomei only sends commit dates to GitHub's API. no code, no commit messages (beyond "work happened here"), no file names. your company's IP never touches the internet.
+A: yes. shomei only sends commit dates to GitHub's API. no code, no commit messages (beyond "ci(shōmei): sync work contribution"), no file names. your company's IP never touches the internet.
 
 **Q: Will this get me in trouble?**
 A: we're not lawyers, but: you're not exposing any proprietary code or information. just timestamps. that said, check your company's policies if you're worried.
@@ -190,6 +191,7 @@ shōmei is a tool to help developers showcase their work. use it responsibly:
 ## credits
 
 built with:
+
 - [click](https://click.palletsprojects.com/) - cli magic
 - [rich](https://rich.readthedocs.io/) - pretty terminal output
 - [requests](https://requests.readthedocs.io/) - http for humans
