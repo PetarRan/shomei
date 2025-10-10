@@ -10,7 +10,7 @@
 
 this CLI tool mirrors your corporate commits to your personal GitHub. no code, no secrets, just timestamps. your contribution graph gets the credit it deserves, and your company's IP stays safe.
 
-![Hero](https://raw.githubusercontent.com/petarran/shomei/main/assets/hero.png)
+![Hero](https://raw.githubusercontent.com/petarran/shomei/main/assets/visualization.png)
 
 ## the problem
 
