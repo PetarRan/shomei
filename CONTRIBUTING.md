@@ -35,9 +35,7 @@ shomei --help
 ### 3. create a branch
 
 ```bash
-git checkout -b feature/your-cool-idea
-# or
-git checkout -b fix/that-annoying-bug
+git checkout -b patch/your-cool-idea
 ```
 
 ### 4. make your changes
@@ -83,7 +81,7 @@ keep it casual but clear.
 ### 7. push & create a PR
 
 ```bash
-git push origin feature/your-cool-idea
+git push origin patch/your-cool-idea
 ```
 
 then go to GitHub and open a pull request. explain what you changed and why.
@@ -96,7 +94,7 @@ we're pretty relaxed about code style, but:
 - add comments for complex logic
 - keep functions short and focused
 - use type hints if you want (but not required)
-- **keep the casual tone in comments and docs**
+- **keep the casual tone in comments and docs** :)
 
 basically: if it looks like the rest of the codebase, you're good.
 
@@ -105,23 +103,21 @@ basically: if it looks like the rest of the codebase, you're good.
 some ideas if you want to contribute but don't know where to start:
 
 ### easy wins
-- improve error messages
-- add more examples to the README
+- improve error messages and error handling
 - fix typos or unclear docs
-- add validation for user inputs
+- add validation for user inputs (semi-done)
+- terminal formatting / ascii art
 
 ### medium stuff
 - add tests (we need these!)
 - improve the GitHub API error handling
-- add a `--version` flag
 - support for GitLab/Bitbucket
 
 ### big ideas
-- web UI for non-technical users
+- web UI for non-technical users (starting soon)
 - OAuth flow instead of personal access tokens
 - scheduled syncing (keep repos in sync automatically)
-- analytics/stats on your commit patterns
-- support for multiple work accounts
+- analytics/stats on your commit patterns (as long as they don't infringe on any IP)
 
 if you want to work on something big, **open an issue first** so we can discuss it. don't want you to spend time on something that won't get merged.
 
@@ -132,7 +128,7 @@ found a bug? open an issue with:
 - what you expected to happen
 - what actually happened
 - how to reproduce it
-- your OS and Python version
+- your OS and Python version (important!!)
 
 **example:**
 ```
@@ -172,7 +168,6 @@ just be cool:
 - be respectful
 - be helpful
 - be patient
-- don't be a jerk
 
 that's it. we're all here to build something useful.
 
