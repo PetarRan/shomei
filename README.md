@@ -60,50 +60,7 @@ shomei
 
 #### example session
 
-```bash
-$ shomei
-
-███████╗██╗  ██╗ ██████╗ ███╗   ███╗███████╗██╗
-██╔════╝██║  ██║██╔═══██╗████╗ ████║██╔════╝██║
-███████╗███████║██║   ██║██╔████╔██║█████╗  ██║
-╚════██║██╔══██║██║   ██║██║╚██╔╝██║██╔══╝  ██║
-███████║██║  ██║╚██████╔╝██║ ╚═╝ ██║███████╗██║
-╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝╚═╝
-
-current git user: alice@bigcorp.com
-current repo: awesome-app
-
-your personal GitHub username: alicecodes
-what should we call the mirror repo? (awesome-app-mirror):
-GitHub personal access token (needs 'repo' permissions): [hidden]
-
-scanning commit history...
-found 247 commits by you
-
-ready to create:
-• repo: github.com/alicecodes/awesome-app-mirror
-• commits: 247 empty commits
-• visibility: public
-• date range: 2024-01-15 to 2025-10-10
-
-proceed with creating the mirror repo? [Y/n]: y
-
-creating GitHub repository...
-repo created: github.com/alicecodes/awesome-app-mirror
-
-creating 247 empty commits...
-mirroring commits... ━━━━━━━━━━━━━━━━━━━━━━━━ 100%
-
-creating README...
-✅ README created
-
-SUCCESS!
-
-mirrored 247 commits to your personal GitHub.
-check it out: github.com/alicecodes/awesome-app-mirror
-
-your contribution graph should update in a few minutes
-```
+![Example Session](https://raw.githubusercontent.com/petarran/shomei/main/assets/example.png)
 
 ### options
 

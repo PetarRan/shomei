@@ -1,4 +1,11 @@
-# shōmei v1.0.1 - Documentation & Code Cleanup -- 10th Oct. 2025
+# shōmei patch v1.0.2 -- 10th Oct. 2025
+
+### what's changed?
+- added an example to the readme.md
+
+---
+
+# shōmei v1.0.1 documentation patch -- 10th Oct. 2025
 
 ### what's changed?
 
