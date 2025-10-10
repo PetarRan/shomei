@@ -4,6 +4,6 @@ shōmei - a CLI tool that safely updates your personal github graph to reflect t
 transforms your commits into safe, sanitized commits, and publishes them to your personal github profile, so your contribution graph reflects your real effort.
 """
 
-__version__ = "0.3.3"
+__version__ = "0.3.4"
 __author__ = "shomei contributors"
 __description__ = "update your personal github graph to reflect the work you did"
