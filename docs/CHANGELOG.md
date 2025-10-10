@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2025-10-10 🚀
+
+### 🎉 First Stable Release!
+
+shōmei has reached 1.0.0! this release adds robust validation, better user experience, and automatic marketing for your mirrored repos.
+
+### Added
+- **input validation for repo names** - validates against GitHub's rules, rejects invalid characters and provides helpful error messages with retry loop
+- **GitHub token format validation** - warns if token doesn't match expected format (ghp_* or github_pat_*)
+- **confirmation prompt** - shows a summary panel and asks for confirmation before creating the repo and commits
+- **automatic rich README generation** - creates a beautiful, marketing-ready README.md in the mirrored repo with:
+  - shōmei badges and branding (purple badge + commit count)
+  - stats about the mirrored commits (count, date range, zero code leaked)
+  - explanation of what the repo is and why it exists
+  - links back to shōmei project with installation instructions
+  - call-to-action to star shōmei on GitHub
+  - professional formatting with badges, sections, and footer
+
+### Changed
+- **better error messages** - all validation errors now provide clear, actionable feedback
+- **improved UX flow** - validation happens at input time with retry loops for invalid input
+- **enhanced summary panel** - shows exactly what will be created (repo URL, commit count, visibility, date range) before proceeding
+- **README is auto-created** - every mirrored repo now has a rich, informative README instead of GitHub's default
+
+### Fixed
+- **prevents garbage input** - users can no longer input invalid repo names with special characters or spaces
+- **better token feedback** - warns about potentially invalid tokens before API calls fail
+
+### Developer Experience
+- cleaner code organization with dedicated validation functions
+- better separation of concerns
+- more maintainable codebase
+
 ## [0.3.2] - 2025-10-10
 
 ### Fixed
