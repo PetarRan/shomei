@@ -52,7 +52,7 @@ def update_version_file(new_version):
     with open(init_file, "w") as f:
         f.write(content)
     
-    print(f"✅ Updated version to {new_version} in shomei/__init__.py")
+    print(f"Updated version to {new_version} in shomei/__init__.py")
 
 def main():
     if len(sys.argv) != 2:
@@ -77,7 +77,7 @@ def main():
         
         update_version_file(new_version)
         
-        print(f"\n🎯 Next steps:")
+        print(f"\n >> Next steps:")
         print(f"1. Commit the version change: git add shomei/__init__.py && git commit -m 'Bump version to {new_version}'")
         print(f"2. Create tag: git tag -a v{new_version} -m 'Release {new_version}'")
         print(f"3. Push tag: git push origin v{new_version}")

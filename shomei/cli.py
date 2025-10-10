@@ -54,8 +54,8 @@ def get_commits_by_author(email):
                 if len(parts) >= 2:
                     commit_hash, date_str = parts[0], parts[1]
                     # parse the ISO date (format: "2025-01-09 10:30:45 +0100")
-                    # remove timezone and convert space to T for ISO format
-                    clean_date = date_str.strip().replace(' ', 'T').split('+')[0]
+                    # remove timezone, then replace first space with T
+                    clean_date = date_str.strip().split('+')[0].strip().replace(' ', 'T', 1)
                     date = datetime.fromisoformat(clean_date)
                     commits.append({'hash': commit_hash, 'date': date})
 
