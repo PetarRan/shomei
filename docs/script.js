@@ -7,7 +7,7 @@ function copyToClipboard(elementId) {
 
     navigator.clipboard.writeText(text).then(() => {
         // find the button that was clicked
-        const button = event.target;
+        const button = document.querySelector(`button[onclick="copyToClipboard('${elementId}')"]`);
         const originalText = button.textContent;
 
         // show feedback
