@@ -13,7 +13,7 @@ from rich.panel import Panel
 from . import __version__
 from .art import print_logo
 from .validators import validate_repo_name, validate_github_token
-from .git_utils import get_git_user_email, get_repo_name, get_commits_by_author
+from .git_utils import get_git_user_email, get_repo_name, get_commits_by_author, get_git_user_name, change_git_user_name, change_git_user_email
 from .github_api import (
     create_github_repo,
     get_main_branch_sha,
@@ -51,12 +51,32 @@ def cli(private, dry_run):
         console.print("[red]!!! no git user found. are you in a git repo?[/red]")
         console.print("[dim]try: git config user.email[/dim]")
         return
+    
+    git_name = get_git_user_name()
+    if not git_name:
+        console.print("[red]!!! no git user name found. are you in a git repo?[/red]")
+        console.print("[dim]try: git config user.name[/dim]")
+        return
 
     repo_name = get_repo_name()
 
-    console.print(f"[bold cyan]current git user:[/bold cyan] {corporate_email}")
+    console.print(f"Hello, [bold]{git_name}[/bold] :wave:\n")
+    console.print(f"[bold cyan]current git email:[/bold cyan] {corporate_email}")
     console.print(f"[bold cyan]current repo:[/bold cyan] {repo_name}")
     console.print()
+
+    if click.confirm("Want to change your git credentials (changes will be applied globally)?"):
+        new_name = click.prompt("new git user name", default=git_name)
+        new_email = click.prompt("new git user email", default=corporate_email)
+        # apply the changes
+        if not dry_run:
+            change_git_user_name(new_name)
+            change_git_user_email(new_email)
+        
+        console.print(f"[green]✔ git user updated to {new_name} <{new_email}>[/green]\n")
+        # update local vars
+        corporate_email = new_email
+        git_name = new_name
 
     # get the user's info
     personal_username = click.prompt("your personal GitHub username")
