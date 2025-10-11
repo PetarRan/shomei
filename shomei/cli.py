@@ -12,8 +12,8 @@ from rich.panel import Panel
 
 from . import __version__
 from .art import print_logo
-from .validators import validate_repo_name, validate_github_token
-from .git_utils import get_git_user_email, get_repo_name, get_commits_by_author, get_git_user_name, change_git_user_name, change_git_user_email
+from .validators import validate_repo_name, validate_github_token, validate_github_username
+from .git_utils import get_git_user_email, get_repo_name, get_commits_by_author, get_git_user_name #change_git_user_name, change_git_user_email
 from .github_api import (
     create_github_repo,
     get_main_branch_sha,
@@ -64,25 +64,37 @@ def cli(private, dry_run):
     console.print(f"[bold cyan]current git email:[/bold cyan] {corporate_email}")
     console.print(f"[bold cyan]current repo:[/bold cyan] {repo_name}")
     console.print()
-
-    if click.confirm("Want to change your git credentials (changes will be applied globally)?"):
-        new_name = click.prompt("new git user name", default=git_name)
-        new_email = click.prompt("new git user email", default=corporate_email)
-        # apply the changes
-        if not dry_run:
-            change_git_user_name(new_name)
-            change_git_user_email(new_email)
+     
+    # optionally let them change their git creds
+    # if click.confirm("Want to change your git credentials (changes will be applied globally)?"):
+    #     new_name = click.prompt("new git user name", default=git_name)
+    #     new_email = click.prompt("new git user email", default=corporate_email)
+    #     # apply the changes
+    #     if not dry_run:
+    #         change_git_user_name(new_name)
+    #         change_git_user_email(new_email)
         
-        console.print(f"[green]✔ git user updated to {new_name} <{new_email}>[/green]\n")
-        # update local vars
-        corporate_email = new_email
-        git_name = new_name
+    #     console.print(f"[green]✔ git user updated to {new_name} <{new_email}>[/green]\n")
+    #     # update local vars
+    #     corporate_email = new_email
+    #     git_name = new_name
 
-    # get the user's info
-    personal_username = click.prompt("your personal GitHub username")
-    while not click.confirm(f"Username: {personal_username}, is that correct?", default=True):
-        personal_username = click.prompt("your personal GitHub username")
-    
+    personal_username = None
+    while True:
+        username = click.prompt("Your personal GitHub username")
+        valid, message = validate_github_username(username)
+
+        if not valid:
+            console.print(f"[red]{message}[/red]")
+            console.print("[dim]Please try again[/dim]\n")
+            continue
+
+        console.print(f"[green]{message}[/green]\n")
+
+        if click.confirm(f"Username: {username}, is that correct?", default=True):
+            personal_username = username
+            break
+
     # get repo name with validation
     suggested_name = f"{repo_name}-mirror"
     mirror_repo_name = None

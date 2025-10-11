@@ -1,7 +1,7 @@
 """Input validation functions for shōmei."""
 
 import re
-
+import requests
 
 def validate_repo_name(name):
     r"""
@@ -69,3 +69,25 @@ def validate_github_token(token):
         console.print("[dim]continuing anyway, but double-check if you get auth errors[/dim]\n")
 
     return True, None
+
+def validate_github_username(username):
+    """
+    Validate whether the given username exists on GitHub.
+
+    Args:
+        username: The GitHub username to validate
+
+    Returns:
+        tuple: (exists: bool, error_message: str or None)
+
+    Notes:
+        Print a warning if given username doesn't exist but don't block.
+    """
+    
+    response = requests.get(f"https://api.github.com/users/{username}")
+    if response.status_code == 404:
+        return False, f"GitHub user '{username}' does not exist"
+    elif response.status_code == 200:
+        return True, f"GitHub user '{username}' exists"
+    else:
+        return False, f"Error checking GitHub user '{username}': {response.status_code}"
