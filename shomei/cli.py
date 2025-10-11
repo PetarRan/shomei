@@ -60,7 +60,9 @@ def cli(private, dry_run):
 
     # get the user's info
     personal_username = click.prompt("your personal GitHub username")
-
+    while not click.confirm(f"Username: {personal_username}, is that correct?", default=True):
+        personal_username = click.prompt("your personal GitHub username")
+    
     # get repo name with validation
     suggested_name = f"{repo_name}-mirror"
     mirror_repo_name = None
