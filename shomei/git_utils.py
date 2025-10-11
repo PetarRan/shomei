@@ -83,29 +83,3 @@ def get_commits_by_author(email):
     except subprocess.CalledProcessError:
         return []
 
-# def change_git_user_email(new_email):
-#     """
-#     Change the git user email in the local repository config.
-
-#     Args:
-#         new_email: The new email to set
-#     """
-#     try:
-#         subprocess.run(['git', 'config', '--global', 'user.email', new_email],
-#                        check=True)
-#     except subprocess.CalledProcessError:
-#         pass
-    
-# def change_git_user_name(new_name):
-#     """
-#     Change the git user name in the local repository config.
-
-#     Args:
-#         new_name: The new name to set
-#     """
-#     try:
-#         subprocess.run(['git', 'config', '--global', 'user.name', new_name],
-#                        check=True)
-#     except subprocess.CalledProcessError:
-#         pass
-
