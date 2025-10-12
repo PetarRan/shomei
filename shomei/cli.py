@@ -12,8 +12,8 @@ from rich.panel import Panel
 
 from . import __version__
 from .art import print_logo
-from .validators import validate_repo_name, validate_github_token
-from .git_utils import get_git_user_email, get_repo_name, get_commits_by_author
+from .validators import validate_repo_name, validate_github_token, validate_github_username
+from .git_utils import get_git_user_email, get_repo_name, get_commits_by_author, get_git_user_name
 from .github_api import (
     create_github_repo,
     get_main_branch_sha,
@@ -51,15 +51,35 @@ def cli(private, dry_run):
         console.print("[red]!!! no git user found. are you in a git repo?[/red]")
         console.print("[dim]try: git config user.email[/dim]")
         return
+    
+    git_name = get_git_user_name()
+    if not git_name:
+        console.print("[red]!!! no git user name found. are you in a git repo?[/red]")
+        console.print("[dim]try: git config user.name[/dim]")
+        return
 
     repo_name = get_repo_name()
 
-    console.print(f"[bold cyan]current git user:[/bold cyan] {corporate_email}")
+    console.print(f"Hello, [bold]{git_name}[/bold] :wave:\n")
+    console.print(f"[bold cyan]current git email:[/bold cyan] {corporate_email}")
     console.print(f"[bold cyan]current repo:[/bold cyan] {repo_name}")
     console.print()
+     
+    personal_username = None
+    while True:
+        username = click.prompt("Your personal GitHub username")
+        valid, message = validate_github_username(username)
 
-    # get the user's info
-    personal_username = click.prompt("your personal GitHub username")
+        if not valid:
+            console.print(f"[red]{message}[/red]")
+            console.print("[dim]Please try again[/dim]\n")
+            continue
+
+        console.print(f"[green]{message}[/green]\n")
+
+        if click.confirm(f"Username: {username}, is that correct?", default=True):
+            personal_username = username
+            break
 
     # get repo name with validation
     suggested_name = f"{repo_name}-mirror"
