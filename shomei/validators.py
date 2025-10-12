@@ -95,3 +95,4 @@ username = username.strip()
         return True, f"GitHub user '{username}' exists"
     else:
         return False, f"Error checking GitHub user '{username}': {response.status_code}"
+        
