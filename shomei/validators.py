@@ -83,7 +83,11 @@ def validate_github_username(username):
     Notes:
         Print a warning if given username doesn't exist but don't block.
     """
+
+if not username or len(username.strip()) == 0:
+    return False, "username cannot be empty"
     
+username = username.strip()
     response = requests.get(f"https://api.github.com/users/{username}", timeout=10)
     if response.status_code == 404:
         return False, f"GitHub user '{username}' does not exist"
