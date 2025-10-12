@@ -1,3 +1,24 @@
+# shōmei v1.0.3 - First Contributor -- 12th Oct. 2025
+
+### what's changed?
+
+> **first contributor to shōmei!**
+> thanks @zFishStick!
+
+### fixes
+
+- **copy buttons in docs** - now work correctly on the docs page
+
+### new features
+
+- **username validator** - validates GitHub usernames during the shōmei migration process to prevent faulty input
+
+### breaking changes
+
+- none
+
+---
+
 # shōmei patch v1.0.2 -- 10th Oct. 2025
 
 ### what's changed?
