@@ -10,6 +10,8 @@
 
 this CLI tool mirrors your corporate commits to your personal GitHub. no code, no secrets, just timestamps. your contribution graph gets the credit it deserves, and your company's IP stays safe.
 
+> **⚠️ Important**: According to [GitHub's Terms of Service](https://docs.github.com/en/site-policy/github-terms/github-terms-of-service#3-account-requirements), "One person or legal entity may maintain no more than one free Account." shōmei is designed to work with your personal GitHub account and paid/work accounts. Using this tool to sync commits across multiple free accounts would violate GitHub's ToS.
+
 ![Hero](https://raw.githubusercontent.com/petarran/shomei/main/assets/visualization.png)
 
 ## the problem
