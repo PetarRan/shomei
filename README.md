@@ -88,16 +88,68 @@ shomei --private
 
 ## github token setup
 
-you'll need a GitHub personal access token with `repo` permissions:
+shōmei works with both **classic** and **fine-grained** personal access tokens. choose the option that works best for you:
 
-1. go to [GitHub Settings → Developer settings → Personal access tokens](https://github.com/settings/tokens)
+### option 1: classic token (easier, recommended for personal use)
+
+1. go to [GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)](https://github.com/settings/tokens)
 2. click "Generate new token (classic)"
 3. give it a name like "shomei"
-4. check the `repo` checkbox (this lets shomei create repos and commits)
-5. generate and copy the token
-6. use it when shomei asks for it
+4. check the `repo` checkbox (this gives full repository access)
+5. set an expiration date (or "No expiration" if you prefer)
+6. generate and copy the token
+7. use it when shomei asks for it
+
+### option 2: fine-grained token (more secure, better control)
+
+fine-grained tokens offer more security through granular permissions. here's how to set one up:
+
+1. go to [GitHub Settings → Developer settings → Personal access tokens → Fine-grained tokens](https://github.com/settings/tokens?type=beta)
+2. click "Generate new token"
+3. give it a name like "shomei"
+4. set an expiration date
+5. **repository access**:
+   - select "All repositories" (if you want to mirror any repo)
+   - OR select "Public Repositories (read and write)" (if you only mirror public repos)
+   - **important**: do NOT select "Only select repositories" unless you manually create the repo first (see option 3)
+6. **permissions** → **account permissions**:
+   - scroll down to find **"Administration"**
+   - set it to **"Read and write"**
+   - this permission allows shomei to create repositories on your account
+7. generate and copy the token
+8. use it when shomei asks for it
+
+### option 3: manual repo + restricted token (most secure)
+
+for maximum security, you can manually create the mirror repo first and use a token with access to ONLY that repo:
+
+1. **create the mirror repo manually**:
+   - go to [github.com/new](https://github.com/new)
+   - create a repo (e.g., "my-work-mirror")
+   - make it public or private (your choice)
+
+2. **create a fine-grained token with minimal permissions**:
+   - go to [GitHub Settings → Developer settings → Personal access tokens → Fine-grained tokens](https://github.com/settings/tokens?type=beta)
+   - click "Generate new token"
+   - give it a name like "shomei-restricted"
+   - set an expiration date
+   - **repository access**: select **"Only select repositories"** → choose your mirror repo
+   - **permissions** → **repository permissions**:
+     - set **"Contents"** to **"Read and write"**
+     - that's it! no Administration permission needed
+   - generate and copy the token
+
+3. **run shomei**:
+   - when prompted for the repo name, use the SAME name as your manually-created repo
+   - shomei will detect the existing repo and add commits to it
+   - your token only has access to that one repo - nothing else!
 
 **pro tip**: save the token somewhere safe (like a password manager). GitHub only shows it once.
+
+### important notes
+
+- **no need to manually create the mirror repository** - shomei creates it automatically for you. if you create it manually, you may encounter permission errors. be sure to use option 3 if you go this way.
+- if you get an error like "resource not accessible by personal access token", your token is missing the Administration permission MOST LIKELY (for fine-grained tokens) or the repo scope (for classic tokens).
 
 ## contributing
 
@@ -147,6 +199,20 @@ A: not yet, but that's a great idea! open an issue or PR if you want to add this
 
 **Q: Why not just change the git config on my work repos?**
 A: because then you'd be committing to company repos with your personal email, which might break things or violate policies. shomei keeps everything separate.
+
+**Q: I'm getting "resource not accessible by personal access token" error. What's wrong?**
+A: this happens when your GitHub token doesn't have the right permissions. you have two options:
+
+- **option 1**: use a token with broader permissions (Administration: Read and write for fine-grained, or `repo` scope for classic)
+- **option 2 (more secure)**: manually create the mirror repo first, then use a fine-grained token with "Only select repositories" access to just that repo. shomei will detect the existing repo automatically!
+
+see the [github token setup](#github-token-setup) section for detailed instructions on both approaches.
+
+**Q: Does shomei support fine-grained personal access tokens?**
+A: now we do lol! shomei works with both classic and fine-grained tokens. fine-grained tokens are more secure and give you better control over permissions. see the setup guide above for instructions.
+
+**Q: Can I use an existing repository instead of creating a new one?**
+A: absolutely! just create the repo manually on GitHub first, then run shomei with the same repo name. shomei will detect the existing repo and add commits to it. this is perfect if you want to use a fine-grained token with "Only select repositories" access - no Administration permission needed, just Contents: Read and write!
 
 ## license
 

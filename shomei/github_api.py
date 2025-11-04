@@ -7,6 +7,46 @@ from rich.console import Console
 console = Console()
 
 
+def check_repo_exists(username, repo_name, token):
+    """
+    New function to check if a repository exists and if the token has access to it.
+
+    Args:
+        username: GitHub username
+        repo_name: Repository name
+        token: GitHub personal access token
+
+    Returns:
+        tuple: (exists: bool, has_access: bool, error_message: str or None)
+    """
+    url = f"https://api.github.com/repos/{username}/{repo_name}"
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+
+        if response.status_code == 200:
+            # repo exists and token has access
+            return True, True, None
+        elif response.status_code == 404:
+            # repo doesn't exist
+            return False, False, None
+        elif response.status_code == 403:
+            # repo might exist but token doesn't have access
+            return True, False, "token doesn't have access to this repository"
+        else:
+            # TODO: other error special handling needed here
+            return False, False, f"unexpected error: {response.status_code}"
+
+    except requests.exceptions.Timeout:
+        return False, False, "request timeout"
+    except Exception as e:
+        return False, False, str(e)
+
+
 def create_github_repo(username, repo_name, token, private=False):
     """
     Create a fresh repository on GitHub.
@@ -42,7 +82,38 @@ def create_github_repo(username, repo_name, token, private=False):
         console.print(f"[yellow]!!! repo already exists, we'll add commits to it[/yellow]")
         return True
     else:
-        console.print(f"[red]!!! couldn't create repo: {response.json().get('message', 'unknown error')}[/red]")
+        # Enhanced error messaging with specific guidance
+        error_msg = response.json().get('message', 'unknown error')
+        console.print(f"[red]!!! couldn't create repo: {error_msg}[/red]")
+
+        if response.status_code == 401:
+            console.print("[yellow]your token is invalid or expired. please generate a new one.[/yellow]")
+        elif response.status_code == 403 or "not accessible" in error_msg.lower():
+            # if it's a fine-grained token 
+            # this could be cleaned up eventually, but tried it out and works fine for now
+            is_fine_grained = token.startswith('github_pat_')
+            console.print("\n[yellow]your token doesn't have permission to create repositories.[/yellow]")
+            console.print("\n[bold]you have two options:[/bold]\n")
+
+            console.print("[bold cyan]option 1: use a more permissive token[/bold cyan]")
+            if is_fine_grained:
+                console.print("[dim]for fine-grained tokens:[/dim]")
+                console.print("[dim]  1. go to: https://github.com/settings/tokens?type=beta[/dim]")
+                console.print("[dim]  2. edit your token[/dim]")
+                console.print("[dim]  3. under 'Account permissions', set 'Administration' to 'Read and write'[/dim]")
+                console.print("[dim]  4. under 'Repository access', select 'All repositories' or 'Public repositories'[/dim]")
+            else:
+                console.print("[dim]for classic tokens:[/dim]")
+                console.print("[dim]  1. go to: https://github.com/settings/tokens[/dim]")
+                console.print("[dim]  2. create a new token with the 'repo' scope checked[/dim]")
+
+            console.print("\n[bold cyan]option 2: manually create the repo first (more secure)[/bold cyan]")
+            console.print(f"[dim]  1. go to: https://github.com/new[/dim]")
+            console.print(f"[dim]  2. create a repo named '{repo_name}'[/dim]")
+            console.print(f"[dim]  3. for fine-grained tokens: select 'Only select repositories' and choose this repo[/dim]")
+            console.print(f"[dim]  4. set 'Contents' permission to 'Read and write' (no Administration needed!)[/dim]")
+            console.print(f"[dim]  5. run shomei again - it will detect the existing repo[/dim]")
+
         return False
 
 

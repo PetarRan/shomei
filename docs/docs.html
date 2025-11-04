@@ -133,24 +133,90 @@ shomei</code></pre>
             <!-- github token -->
             <div class="section">
                 <h2 class="section-title">github token setup</h2>
-                <p style="color: var(--text-light); margin-bottom: 1rem;">
-                    you need a GitHub personal access token with <code>repo</code> permissions. here's how to get one:
+                <p style="color: var(--text-light); margin-bottom: 2rem;">
+                    shōmei works with both <strong>classic</strong> and <strong>fine-grained</strong> personal access tokens. choose the option that works best for you:
                 </p>
 
-                <ol style="color: var(--text-light); margin-left: 2rem; line-height: 2;">
-                    <li>go to <a href="https://github.com/settings/tokens" style="color: var(--primary);">GitHub Settings → Developer settings → Personal access tokens</a></li>
+                <h3 style="color: var(--text); margin-bottom: 1rem;">option 1: classic token (easier, recommended for personal use)</h3>
+                <ol style="color: var(--text-light); margin-left: 2rem; line-height: 2; margin-bottom: 2rem;">
+                    <li>go to <a href="https://github.com/settings/tokens" style="color: var(--primary);">GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)</a></li>
                     <li>click "Generate new token (classic)"</li>
                     <li>give it a name like "shomei"</li>
-                    <li>check the <code>repo</code> checkbox (full control of private repositories)</li>
-                    <li>click "Generate token"</li>
-                    <li>copy the token (GitHub only shows it once!)</li>
-                    <li>save it somewhere safe (like a password manager)</li>
-                    <li>use it when shomei asks for your token</li>
+                    <li>check the <code>repo</code> checkbox (this gives full repository access)</li>
+                    <li>set an expiration date (or "No expiration" if you prefer)</li>
+                    <li>generate and copy the token</li>
+                    <li>use it when shomei asks for it</li>
                 </ol>
 
-                <p style="color: var(--text-light); margin-top: 1rem; background: var(--bg-dark); padding: 1rem; border-radius: 8px;">
-                    <strong>important:</strong> never share your token publicly. treat it like a password. if you accidentally expose it, revoke it immediately and create a new one.
+                <h3 style="color: var(--text); margin-bottom: 1rem;">option 2: fine-grained token (more secure, better control)</h3>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">
+                    fine-grained tokens offer more security through granular permissions:
                 </p>
+                <ol style="color: var(--text-light); margin-left: 2rem; line-height: 2; margin-bottom: 2rem;">
+                    <li>go to <a href="https://github.com/settings/tokens?type=beta" style="color: var(--primary);">GitHub Settings → Developer settings → Personal access tokens → Fine-grained tokens</a></li>
+                    <li>click "Generate new token"</li>
+                    <li>give it a name like "shomei"</li>
+                    <li>set an expiration date</li>
+                    <li><strong>repository access</strong>:
+                        <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                            <li>select "All repositories" (if you want to mirror any repo)</li>
+                            <li>OR select "Public Repositories (read and write)" (if you only mirror public repos)</li>
+                            <li><strong style="color: var(--accent);">important:</strong> do NOT select "Only select repositories" unless you manually create the repo first (see option 3)</li>
+                        </ul>
+                    </li>
+                    <li><strong>permissions</strong> → <strong>account permissions</strong>:
+                        <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                            <li>scroll down to find <strong>"Administration"</strong></li>
+                            <li>set it to <strong>"Read and write"</strong></li>
+                            <li>this permission allows shomei to create repositories on your account</li>
+                        </ul>
+                    </li>
+                    <li>generate and copy the token</li>
+                    <li>use it when shomei asks for it</li>
+                </ol>
+
+                <h3 style="color: var(--text); margin-bottom: 1rem;">option 3: manual repo + restricted token (most secure)</h3>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">
+                    for maximum security, you can manually create the mirror repo first and use a token with access to ONLY that repo:
+                </p>
+
+                <p style="color: var(--text); margin-top: 1.5rem; margin-bottom: 0.5rem;"><strong>1. create the mirror repo manually:</strong></p>
+                <ul style="color: var(--text-light); margin-left: 2rem; margin-bottom: 1rem;">
+                    <li>go to <a href="https://github.com/new" style="color: var(--primary);">github.com/new</a></li>
+                    <li>create a repo (e.g., "my-work-mirror")</li>
+                    <li>make it public or private (your choice)</li>
+                </ul>
+
+                <p style="color: var(--text); margin-top: 1.5rem; margin-bottom: 0.5rem;"><strong>2. create a fine-grained token with minimal permissions:</strong></p>
+                <ul style="color: var(--text-light); margin-left: 2rem; margin-bottom: 1rem;">
+                    <li>go to <a href="https://github.com/settings/tokens?type=beta" style="color: var(--primary);">GitHub Settings → Fine-grained tokens</a></li>
+                    <li>click "Generate new token"</li>
+                    <li>give it a name like "shomei-restricted"</li>
+                    <li>set an expiration date</li>
+                    <li><strong>repository access</strong>: select <strong>"Only select repositories"</strong> → choose your mirror repo</li>
+                    <li><strong>permissions</strong> → <strong>repository permissions</strong>: set <strong>"Contents"</strong> to <strong>"Read and write"</strong></li>
+                    <li>that's it! no Administration permission needed</li>
+                    <li>generate and copy the token</li>
+                </ul>
+
+                <p style="color: var(--text); margin-top: 1.5rem; margin-bottom: 0.5rem;"><strong>3. run shomei:</strong></p>
+                <ul style="color: var(--text-light); margin-left: 2rem; margin-bottom: 2rem;">
+                    <li>when prompted for the repo name, use the SAME name as your manually-created repo</li>
+                    <li>shomei will detect the existing repo and add commits to it</li>
+                    <li>your token only has access to that one repo - nothing else!</li>
+                </ul>
+
+                <div style="background: var(--bg-dark); padding: 1.5rem; border-radius: 8px; margin-top: 2rem;">
+                    <p style="color: var(--text-light); margin-bottom: 1rem;">
+                        <strong>pro tip:</strong> save the token somewhere safe (like a password manager). GitHub only shows it once!
+                    </p>
+                    <p style="color: var(--accent); margin-bottom: 1rem;">
+                        <strong>important:</strong> don't manually create the mirror repository - shomei creates it automatically for you. if you create it manually, you may encounter permission errors.
+                    </p>
+                    <p style="color: var(--text-light);">
+                        <strong>security:</strong> never share your token publicly. treat it like a password. if you accidentally expose it, revoke it immediately and create a new one.
+                    </p>
+                </div>
             </div>
 
             <!-- how it works -->
@@ -267,6 +333,28 @@ shomei</code></pre>
                     <h3 style="color: var(--text); margin-bottom: 0.5rem;">I'm getting API errors, what do I do?</h3>
                     <p style="color: var(--text-light); margin-bottom: 2rem;">
                         check that your GitHub token has <code>repo</code> permissions and hasn't expired. if it's a rate limit issue, wait a few minutes and try again. if the problem persists, <a href="https://github.com/petarran/shomei/issues" style="color: var(--primary);">open an issue</a>.
+                    </p>
+
+                    <h3 style="color: var(--text); margin-bottom: 0.5rem;">I'm getting "Resource not accessible by personal access token" error. What's wrong?</h3>
+                    <p style="color: var(--text-light); margin-bottom: 1rem;">
+                        this happens when your GitHub token doesn't have the right permissions. you have two options:
+                    </p>
+                    <ul style="color: var(--text-light); margin-left: 2rem; margin-bottom: 1rem;">
+                        <li><strong>option 1:</strong> use a token with broader permissions (Administration: Read and write for fine-grained, or <code>repo</code> scope for classic)</li>
+                        <li><strong>option 2 (more secure):</strong> manually create the mirror repo first, then use a fine-grained token with "Only select repositories" access to just that repo. shomei will detect the existing repo automatically!</li>
+                    </ul>
+                    <p style="color: var(--text-light); margin-bottom: 2rem;">
+                        see the <a href="#usage" style="color: var(--primary);">github token setup</a> section above for detailed instructions on both approaches.
+                    </p>
+
+                    <h3 style="color: var(--text); margin-bottom: 0.5rem;">does shomei support fine-grained personal access tokens?</h3>
+                    <p style="color: var(--text-light); margin-bottom: 2rem;">
+                        yes! shomei works with both classic and fine-grained tokens. fine-grained tokens are more secure and give you better control over permissions. see the token setup guide above for instructions on configuring both types.
+                    </p>
+
+                    <h3 style="color: var(--text); margin-bottom: 0.5rem;">can I use an existing repository instead of creating a new one?</h3>
+                    <p style="color: var(--text-light); margin-bottom: 2rem;">
+                        absolutely! just create the repo manually on GitHub first, then run shomei with the same repo name. shomei will detect the existing repo and add commits to it. this is perfect if you want to use a fine-grained token with "Only select repositories" access - no Administration permission needed, just Contents: Read and write!
                     </p>
                 </div>
             </div>

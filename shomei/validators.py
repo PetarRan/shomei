@@ -39,7 +39,7 @@ def validate_repo_name(name):
 
 def validate_github_token(token):
     """
-    Validate GitHub token format.
+    Validate GitHub token format and check if it has basic authentication.
 
     Args:
         token: The GitHub personal access token to validate
@@ -67,6 +67,31 @@ def validate_github_token(token):
     if not (token.startswith('ghp_') or token.startswith('github_pat_')):
         console.print("[yellow]!!! warning: token doesn't match expected format (ghp_* or github_pat_*)[/yellow]")
         console.print("[dim]continuing anyway, but double-check if you get auth errors[/dim]\n")
+
+    try:
+        headers = {
+            "Authorization": f"token {token}",
+            "Accept": "application/vnd.github.v3+json"
+        }
+        response = requests.get("https://api.github.com/user", headers=headers, timeout=10)
+
+        if response.status_code == 401:
+            return False, "token is invalid or expired"
+        elif response.status_code == 403:
+            # soooo here token might work but has rate limit issues, let it proceed
+            console.print("[yellow]warning: rate limit exceeded or token has restrictions[/yellow]\n")
+            return True, None
+        elif response.status_code != 200:
+            console.print(f"[yellow]warning: couldn't verify token (status {response.status_code})[/yellow]")
+            console.print("[dim]continuing anyway, but you may encounter issues[/dim]\n")
+            return True, None
+
+    except requests.exceptions.Timeout:
+        console.print("[yellow]warning: timeout while verifying token[/yellow]")
+        console.print("[dim]continuing anyway, but you may have network issues[/dim]\n")
+        return True, None
+    except Exception:
+        pass
 
     return True, None
 

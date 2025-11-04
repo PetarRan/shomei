@@ -1,7 +1,7 @@
 """Git repository operations for shōmei."""
 
 import subprocess
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 def get_git_user_email():
@@ -74,9 +74,16 @@ def get_commits_by_author(email):
                 if len(parts) >= 2:
                     commit_hash, date_str = parts[0], parts[1]
                     # parse the ISO date (format: "2025-01-09 10:30:45 +0100")
-                    # remove timezone, then replace first space with T
-                    clean_date = date_str.strip().split('+')[0].strip().replace(' ', 'T', 1)
-                    date = datetime.fromisoformat(clean_date)
+                    # try to parse with timezone first, fallback to naive + add UTC
+                    try:
+                        # try parsing with timezone (e.g., "2025-01-09 10:30:45 +0100")
+                        date = datetime.strptime(date_str.strip(), '%Y-%m-%d %H:%M:%S %z')
+                    except ValueError:
+                        # fallback: parse without timezone and assume UTC
+                        clean_date = date_str.strip().split('+')[0].split('-', 3)[-1].strip() if '+' in date_str else date_str.strip()
+                        clean_date = clean_date.replace(' ', 'T', 1)
+                        date = datetime.fromisoformat(clean_date).replace(tzinfo=timezone.utc)
+
                     commits.append({'hash': commit_hash, 'date': date})
 
         return commits

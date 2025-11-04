@@ -5,6 +5,7 @@ super simple, super safe.
 """
 
 import time
+from datetime import timezone
 import click
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
@@ -15,6 +16,7 @@ from .art import print_logo
 from .validators import validate_repo_name, validate_github_token, validate_github_username
 from .git_utils import get_git_user_email, get_repo_name, get_commits_by_author, get_git_user_name
 from .github_api import (
+    check_repo_exists,
     create_github_repo,
     get_main_branch_sha,
     create_empty_commit,
@@ -146,13 +148,23 @@ def cli(private, dry_run):
 
     console.print()
 
-    # create the repo
-    console.print("[cyan]creating GitHub repository...[/cyan]")
-    if not create_github_repo(personal_username, mirror_repo_name, token, private):
-        return
+    console.print("[cyan]checking if repository exists...[/cyan]")
+    exists, has_access, error = check_repo_exists(personal_username, mirror_repo_name, token)
 
-    # wait a sec for GitHub to catch up
-    time.sleep(2)
+    if exists and has_access:
+        console.print(f"[green]✓ found existing repo: github.com/{personal_username}/{mirror_repo_name}[/green]")
+        console.print("[dim]will add commits to the existing repository[/dim]\n")
+    elif exists and not has_access:
+        console.print(f"[red]!!! repository exists but your token doesn't have access to it[/red]")
+        console.print(f"[yellow]make sure your token has access to github.com/{personal_username}/{mirror_repo_name}[/yellow]")
+        return
+    else:
+        console.print("[cyan]repository doesn't exist, creating it...[/cyan]")
+        if not create_github_repo(personal_username, mirror_repo_name, token, private):
+            return
+
+        # GH rate limit, wait for it to catch up
+        time.sleep(2)
 
     # get the initial branch SHA
     parent_sha = get_main_branch_sha(personal_username, mirror_repo_name, token)
@@ -164,7 +176,11 @@ def cli(private, dry_run):
     failed_commits = []
 
     # sort commits chronologically (oldest first)
-    commits_sorted = sorted(commits, key=lambda x: x['date'])
+    # ensure all datetimes are timezone-aware to avoid comparison errors
+    commits_sorted = sorted(
+        commits,
+        key=lambda x: x['date'].astimezone(timezone.utc) if x['date'].tzinfo else x['date'].replace(tzinfo=timezone.utc)
+    )
 
     with Progress(
         SpinnerColumn(),
