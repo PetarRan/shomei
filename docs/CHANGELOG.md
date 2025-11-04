@@ -1,3 +1,51 @@
+# shōmei v1.1.0 - The UX & Security Update -- 4th Nov. 2025
+
+### what's changed?
+
+> **big UX improvements + critical bug fix!**
+> special thanks to the community for reporting issues and suggesting fixes
+> thanks to @uros-gavrilovic @sankhya007
+> + biledionez from reddit :)
+
+### fixes
+
+- **datetime comparison bug** - fixed `TypeError: can't compare offset-naive and offset-aware datetimes` when sorting commits
+  - now properly parses git dates with timezone info
+  - shoutout to biledionez from reddit for cracking this one
+
+### new features
+
+- **smart repository detection** - shomei now checks if a mirror repo already exists before trying to create it
+  - enables secure workflow with manually-created repos + restricted tokens
+  - supports fine-grained tokens with "Only select repositories" access
+  - no more "resource not accessible by personal access token" errors when using existing repos!
+
+- **enhanced error messages** - contextual guidance based on token type
+
+- **token validation** - tests GitHub tokens before proceeding
+  - better user experience overall
+
+### documentation updates
+
+- **three token setup options** documented in README
+  - option 1: classic token (easiest)
+  - option 2: fine-grained token with auto-create
+  - option 3: manual repo + restricted token (most secure)
+- **new FAQ entries**
+- **security-focused guidance**
+
+### breaking changes
+
+- none! fully backward compatible with v1.0.x
+
+### what this means for you
+
+- **if you had datetime errors** - they should be fixed now
+- **if you want maximum security** - you can now use restricted tokens with manually-created repos
+- **if you hit permission errors** - you'll get helpful guidance instead of cryptic messages :)
+
+---
+
 # shōmei v1.0.3 - First Contributor -- 12th Oct. 2025
 
 ### what's changed?
