@@ -95,12 +95,14 @@ def validate_github_token(token):
 
     return True, None
 
-def validate_github_username(username):
+def validate_github_username(working_dir_username, potential_username):
     """
     Validate whether the given username exists on GitHub.
+    Makes sure new username is a different GitHub account than one in the working directory
 
     Args:
-        username: The GitHub username to validate
+        working_dir_username: GitHub username in the working directory
+        potential_username: The GitHub username to validate
 
     Returns:
         tuple: (exists: bool, error_message: str or None)
@@ -108,15 +110,18 @@ def validate_github_username(username):
     Notes:
         Print a warning if given username doesn't exist but don't block.
     """
-    if not username or len(username.strip()) == 0:
+    if not potential_username or len(potential_username.strip()) == 0:
         return False, "username cannot be empty"
+    
+    if potential_username == working_dir_username:
+        return False, f"This repo is already using '{potential_username}'"
 
-    username = username.strip()
-    response = requests.get(f"https://api.github.com/users/{username}", timeout=10)
+    potential_username = potential_username.strip()
+    response = requests.get(f"https://api.github.com/users/{potential_username}", timeout=10)
     if response.status_code == 404:
-        return False, f"GitHub user '{username}' does not exist"
+        return False, f"GitHub user '{potential_username}' does not exist"
     elif response.status_code == 200:
-        return True, f"GitHub user '{username}' exists"
+        return True, f"GitHub user '{potential_username}' exists"
     else:
-        return False, f"Error checking GitHub user '{username}': {response.status_code}"
+        return False, f"Error checking GitHub user '{potential_username}': {response.status_code}"
         

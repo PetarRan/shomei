@@ -70,7 +70,7 @@ def cli(private, dry_run):
     personal_username = None
     while True:
         username = click.prompt("Your personal GitHub username")
-        valid, message = validate_github_username(username)
+        valid, message = validate_github_username(git_name, username)
 
         if not valid:
             console.print(f"[red]{message}[/red]")
