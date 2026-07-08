@@ -75,6 +75,41 @@ shomei --dry-run
 shomei --private
 ```
 
+### non-interactive / CI usage
+
+pass everything up front and shōmei runs without prompting. it also simplifies
+its output (no logo, panels, or spinners) whenever it detects a non-interactive
+terminal (a pipe, cron job, or CI), and exits non-zero on failure.
+
+```bash
+# fully scripted run — no prompts, fails fast if a value is missing
+shomei \
+  --username your-personal-username \
+  --repo-name work-mirror \
+  --token ghp_your_token \
+  --non-interactive
+
+# the token can also come from the environment (handy for CI secrets)
+export SHOMEI_GITHUB_TOKEN=ghp_your_token
+shomei -u your-personal-username -r work-mirror --non-interactive
+
+# override the git identity used to detect commits / greeting
+shomei -u your-personal-username -e work@company.com -n "Your Name" --non-interactive
+
+# skip only the confirmation prompt but keep prompting for anything missing
+shomei --yes
+```
+
+| flag | description |
+|------|-------------|
+| `-u, --username` | your personal GitHub username |
+| `-r, --repo-name` | name for the mirror repo (default: `<repo>-mirror`) |
+| `-t, --token` | GitHub token (or set `SHOMEI_GITHUB_TOKEN`) |
+| `-e, --email` | git author email to filter commits (default: `git config user.email`) |
+| `-n, --name` | your name for the greeting (default: `git config user.name`) |
+| `-y, --yes` | skip confirmation prompts |
+| `--non-interactive` | never prompt; fail if a required value is missing (implies `--yes`) |
+
 ## how it works
 
 1. scans your git log for commits with your email
