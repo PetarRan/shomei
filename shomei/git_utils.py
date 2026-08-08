@@ -4,6 +4,34 @@ import subprocess
 from datetime import datetime, timezone
 
 
+def get_git_root():
+    """Return the top-level directory of the current Git repository."""
+    try:
+        result = subprocess.run(
+            ['git', 'rev-parse', '--show-toplevel'],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        return result.stdout.strip()
+    except subprocess.CalledProcessError:
+        return None
+
+
+def get_git_remote_url():
+    """Return the origin URL, or ``None`` when the repository has no origin."""
+    try:
+        result = subprocess.run(
+            ['git', 'remote', 'get-url', 'origin'],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        return result.stdout.strip() or None
+    except subprocess.CalledProcessError:
+        return None
+
+
 def get_git_user_email():
     """
     Get the current git user email from git config.
@@ -42,9 +70,9 @@ def get_repo_name():
         str: The repository name, or "unknown-repo" if not found
     """
     try:
-        result = subprocess.run(['git', 'remote', 'get-url', 'origin'],
-                              capture_output=True, text=True, check=True)
-        url = result.stdout.strip()
+        url = get_git_remote_url()
+        if not url:
+            return "unknown-repo"
         # extract repo name from URLs like: https://github.com/user/repo.git
         return url.split('/')[-1].replace('.git', '')
     except subprocess.CalledProcessError:
@@ -89,4 +117,3 @@ def get_commits_by_author(email):
         return commits
     except subprocess.CalledProcessError:
         return []
-

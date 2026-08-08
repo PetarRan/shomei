@@ -30,6 +30,7 @@ lots of developers use separate emails for work, and when they leave a company, 
 - **dead simple** - one command, that's it
 - **contribution proof** - updates your GitHub graph to show you were actually working
 - **your commits only** - filters by your email, won't touch anyone else's work
+- **incremental syncs** - remembers mirrored commit hashes and only adds new work
 - **dry-run mode** - preview before you commit (pun intended)
 - **private repos** - option to mirror to a private repo if you want
 
@@ -75,14 +76,58 @@ shomei --dry-run
 shomei --private
 ```
 
+### non-interactive / CI usage
+
+pass everything up front and shōmei runs without prompting. it also simplifies
+its output (no logo, panels, or spinners) whenever it detects a non-interactive
+terminal (a pipe, cron job, or CI), and exits non-zero on failure.
+
+```bash
+# fully scripted run — no prompts, fails fast if a value is missing
+shomei \
+  --username your-personal-username \
+  --repo-name work-mirror \
+  --token ghp_your_token \
+  --non-interactive
+
+# the token can also come from the environment (handy for CI secrets)
+export SHOMEI_GITHUB_TOKEN=ghp_your_token
+shomei -u your-personal-username -r work-mirror --non-interactive
+
+# override the git identity used to detect commits / greeting
+shomei -u your-personal-username -e work@company.com -n "Your Name" --non-interactive
+
+# skip only the confirmation prompt but keep prompting for anything missing
+shomei --yes
+```
+
+| flag | description |
+|------|-------------|
+| `-u, --username` | your personal GitHub username |
+| `-r, --repo-name` | name for the mirror repo (default: `<repo>-mirror`) |
+| `-t, --token` | GitHub token (or set `SHOMEI_GITHUB_TOKEN`) |
+| `-e, --email` | git author email to filter commits (default: `git config user.email`) |
+| `-n, --name` | your name for the greeting (default: `git config user.name`) |
+| `-y, --yes` | skip confirmation prompts |
+| `--non-interactive` | never prompt; fail if a required value is missing (implies `--yes`) |
+
 ## how it works
 
 1. scans your git log for commits with your email
 2. extracts just the commit dates (nothing else!)
-3. creates a new repo on your personal GitHub
+3. creates a new repo on your personal GitHub, or finds the existing mirror
 4. uses GitHub's API to create empty commits with those dates
-5. generates a beautiful README for your mirrored repo
-6. boom, your contribution graph now shows your real activity
+5. records each successfully mirrored source commit hash in `.shomei/state.json`
+6. generates a beautiful README for your mirrored repo
+7. boom, your contribution graph now shows your real activity
+
+Run shōmei again whenever you have new commits. It reads the local state file
+and only syncs source commits whose hashes have not been recorded yet. The
+state file is kept in the source repository's ignored `.shomei/` directory and
+contains no source code, messages, paths, or secrets.
+
+Mirrors created by an older shōmei version are migrated automatically from
+their existing generated commit timestamps on the next run.
 
 **important**: no code ever leaves your machine. we only send timestamps to GitHub's API. your company's IP stays exactly where it is.
 
