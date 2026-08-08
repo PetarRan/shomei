@@ -30,6 +30,7 @@ lots of developers use separate emails for work, and when they leave a company, 
 - **dead simple** - one command, that's it
 - **contribution proof** - updates your GitHub graph to show you were actually working
 - **your commits only** - filters by your email, won't touch anyone else's work
+- **incremental syncs** - remembers mirrored commit hashes and only adds new work
 - **dry-run mode** - preview before you commit (pun intended)
 - **private repos** - option to mirror to a private repo if you want
 
@@ -114,10 +115,19 @@ shomei --yes
 
 1. scans your git log for commits with your email
 2. extracts just the commit dates (nothing else!)
-3. creates a new repo on your personal GitHub
+3. creates a new repo on your personal GitHub, or finds the existing mirror
 4. uses GitHub's API to create empty commits with those dates
-5. generates a beautiful README for your mirrored repo
-6. boom, your contribution graph now shows your real activity
+5. records each successfully mirrored source commit hash in `.shomei/state.json`
+6. generates a beautiful README for your mirrored repo
+7. boom, your contribution graph now shows your real activity
+
+Run shōmei again whenever you have new commits. It reads the local state file
+and only syncs source commits whose hashes have not been recorded yet. The
+state file is kept in the source repository's ignored `.shomei/` directory and
+contains no source code, messages, paths, or secrets.
+
+Mirrors created by an older shōmei version are migrated automatically from
+their existing generated commit timestamps on the next run.
 
 **important**: no code ever leaves your machine. we only send timestamps to GitHub's API. your company's IP stays exactly where it is.
 

@@ -1,10 +1,20 @@
 """GitHub API operations for shōmei."""
 
 import base64
+from datetime import datetime, timezone
 import requests
 from rich.console import Console
 
 console = Console()
+
+
+def _github_date(date):
+    """Format a commit date as a UTC timestamp for GitHub's API."""
+    if date.tzinfo is None:
+        date = date.replace(tzinfo=timezone.utc)
+    else:
+        date = date.astimezone(timezone.utc)
+    return date.strftime('%Y-%m-%dT%H:%M:%SZ')
 
 
 def check_repo_exists(username, repo_name, token):
@@ -141,6 +151,61 @@ def get_main_branch_sha(username, repo_name, token):
     return None
 
 
+def get_mirrored_commit_dates(username, repo_name, token):
+    """Return dates for existing shōmei commits in a mirror repository.
+
+    This is used only to migrate repositories created before local state was
+    introduced.  ``None`` means the history could not be read; an empty list
+    is a successfully-read repository with no shōmei commits.
+    """
+    url = f"https://api.github.com/repos/{username}/{repo_name}/commits"
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+    dates = []
+    page = 1
+    per_page = 100
+
+    try:
+        while True:
+            response = requests.get(
+                url,
+                headers=headers,
+                params={"sha": "main", "page": page, "per_page": per_page},
+                timeout=10,
+            )
+            if response.status_code != 200:
+                return None
+
+            commits = response.json()
+            if not isinstance(commits, list):
+                return None
+
+            for commit in commits:
+                commit_data = commit.get("commit", {})
+                if not isinstance(commit_data, dict):
+                    continue
+                message = commit_data.get("message", "")
+                if not message.startswith("ci(shōmei): sync work contribution"):
+                    continue
+
+                author = commit_data.get("author", {})
+                date_string = author.get("date") if isinstance(author, dict) else None
+                if not date_string:
+                    continue
+                try:
+                    dates.append(datetime.fromisoformat(date_string.replace("Z", "+00:00")))
+                except ValueError:
+                    continue
+
+            if len(commits) < per_page:
+                return dates
+            page += 1
+    except (requests.exceptions.RequestException, ValueError, TypeError):
+        return None
+
+
 def create_empty_commit(username, repo_name, date, token, parent_sha=None):
     """
     Create an empty commit via GitHub API.
@@ -191,12 +256,12 @@ def create_empty_commit(username, repo_name, date, token, parent_sha=None):
             "author": {
                 "name": username,
                 "email": f"{username}@users.noreply.github.com",
-                "date": date.strftime('%Y-%m-%dT%H:%M:%SZ')
+                "date": _github_date(date)
             },
             "committer": {
                 "name": username,
                 "email": f"{username}@users.noreply.github.com",
-                "date": date.strftime('%Y-%m-%dT%H:%M:%SZ')
+                "date": _github_date(date)
             }
         }
 
