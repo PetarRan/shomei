@@ -17,6 +17,7 @@ from .git_utils import get_git_user_email, get_repo_name, get_commits_by_author
 from .github_api import (
     create_github_repo,
     get_main_branch_sha,
+    get_mirrored_commit_dates,
     create_empty_commit,
     update_branch_ref,
     update_repo_readme
@@ -35,6 +36,7 @@ __all__ = [
     # github api
     'create_github_repo',
     'get_main_branch_sha',
+    'get_mirrored_commit_dates',
     'create_empty_commit',
     'update_branch_ref',
     'update_repo_readme',
